@@ -245,7 +245,8 @@
     justify-content: center;
     align-items: center;
     z-index: 9999;
-    transition: opacity 0.5s ease;
+    transition: opacity 0.35s ease;
+    will-change: opacity;
   }
   
   #splash-screen img {
@@ -260,7 +261,7 @@
   }
   
   .splash-out img {
-    transform: scale(5); /* Hacerse grande de golpe */
+    transform: scale(15); /* Escala mayor para que parezca que pasa hacia ti */
   }
 
   .anim-update {
@@ -502,7 +503,7 @@
         splash.classList.add('splash-out');
         setTimeout(() => {
           splash.style.display = 'none';
-        }, 600); // Wait for transition to finish
+        }, 350); // Match new transition duration
       }
     }, 3000);
   });
