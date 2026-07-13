@@ -386,7 +386,7 @@
   </div>
 
   <div class="actions">
-    <a class="play-btn" href="https://youtu.be/o_WIsCZHc9w" target="_blank" rel="noopener noreferrer" aria-label="Reproducir Me Rompe Principal">
+    <a class="play-btn" id="main-play-btn" href="https://youtu.be/o_WIsCZHc9w" target="_blank" rel="noopener noreferrer" aria-label="Reproducir Me Rompe Principal">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v13.72a1 1 0 001.5.86l11-6.86a1 1 0 000-1.72l-11-6.86a1 1 0 00-1.5.86z"/></svg>
     </a>
     <span class="dots" aria-label="Más opciones">
@@ -478,6 +478,7 @@
   const t3Name = document.getElementById('track3-name');
   const t3By = document.getElementById('track3-by');
   const t3Time = document.getElementById('track3-time');
+  const mainPlayBtn = document.getElementById('main-play-btn');
 
   function getDiffForCountry(tz, targetHour){
     const now = new Date();
@@ -544,10 +545,16 @@
     
     if (fullyLaunched) {
        unlockTrack3(!wasFullyLaunched);
-       wasFullyLaunched = true; 
+       wasFullyLaunched = true;
+       // Cuando el álbum completo se lanza, el botón principal lleva a la playlist
+       mainPlayBtn.href = "https://www.youtube.com/watch?v=udAdzocRmxY&list=PLEnH0goQTelA&pp=sAgC";
+       mainPlayBtn.setAttribute('aria-label', 'Reproducir Álbum Completo');
     } else {
        lockTrack3();
        wasFullyLaunched = false;
+       // Si solo está el sencillo o no ha salido nada, el botón principal lleva al sencillo
+       mainPlayBtn.href = "https://youtu.be/o_WIsCZHc9w";
+       mainPlayBtn.setAttribute('aria-label', 'Reproducir Sencillo');
     }
 
     const isWaitingForAlbum = singleLaunched && !fullyLaunched;
