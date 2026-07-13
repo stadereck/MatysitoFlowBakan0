@@ -1,1 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Me Rompe — MatysitoFlowBakan0</title>
+<style>
+  :root{
+    --bg: #121212;
+    --panel: #0d0d0d;
+    --line: rgba(255,255,255,0.12);
+    --text: #ffffff;
+    --text-dim: #a7a7a7;
+    --green: #1ed760;
+  }
 
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .app{max-width:1000px;margin:0 auto;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:56px 40px 32px;
+    background:linear-gradient(180deg, #4d4d4d 0%, #2c2c2c 55%, var(--bg) 100%);
+  }
+  .hero-inner{display:flex; gap:24px; align-items:flex-end; flex-wrap:wrap;}
+
+  .cover{
+    width:212px; height:212px; flex-shrink:0;
+    border-radius:4px;
+    box-shadow:0 22px 55px rgba(0,0,0,0.55);
+    overflow:hidden;
+    background:linear-gradient(160deg,#3a3a3c 0%,#232325 100%);
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  .meta{flex:1; min-width:280px; padding-bottom:2px;}
+  .eyebrow{
+    font-size:15px; font-weight:400; color:var(--text);
+    margin:0 0 8px;
+  }
+  .title{
+    font-weight:900;
+    font-size:clamp(34px, 6vw, 72px);
+    line-height:1.05;
+    margin:0 0 18px;
+    letter-spacing:-0.02em;
+  }
+  .artist-row{
+    display:flex; align-items:center; gap:8px; margin-bottom:22px;
+    font-size:15px; color:var(--text-dim); flex-wrap:wrap;
+  }
+  .artist-avatar{
+    width:24px; height:24px; border-radius:50%; flex-shrink:0;
+    background:#535353;
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
+  }
+  .artist-avatar svg{width:14px; height:14px; opacity:0.8;}
+  .artist-link{
+    color:var(--text); font-weight:700; text-decoration:none;
+    border-bottom:1px solid transparent;
+  }
+  .artist-link:hover{
+    text-decoration:underline;
+  }
+  .dot{opacity:.8;}
+
+  /* ---------- COUNTDOWN + COUNTRY ROW ---------- */
+  .release-row{
+    display:flex; gap:14px; flex-wrap:wrap; align-items:stretch;
+  }
+
+  .countdown{
+    display:flex;
+    background:var(--panel);
+    border-radius:4px;
+    overflow:hidden;
+  }
+  .countdown .cell{
+    padding:14px 22px;
+    text-align:center;
+    min-width:64px;
+    position:relative;
+  }
+  .countdown .cell + .cell::before{
+    content:"";
+    position:absolute; left:0; top:14px; bottom:14px;
+    width:1px; background:rgba(255,255,255,0.18);
+  }
+  .countdown .num{
+    font-size:28px; font-weight:700; font-variant-numeric:tabular-nums;
+    color:var(--text);
+    line-height:1;
+  }
+  .countdown .label{
+    font-size:12px; color:var(--text-dim); margin-top:6px;
+  }
+
+  .country-card{
+    background:var(--panel);
+    border-radius:4px;
+    padding:12px 18px;
+    min-width:230px;
+    display:flex; flex-direction:column; justify-content:center; gap:7px;
+  }
+  .country-card .q{
+    font-size:12px; color:var(--text-dim);
+  }
+  .country-select{
+    width:100%;
+    background:#2a2a2a;
+    color:var(--text);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:7px 8px;
+    font-size:13px;
+    font-family:inherit;
+    outline:none;
+  }
+  .country-select:focus{border-color:#7a7a7a;}
+  .country-result{
+    font-size:12.5px; color:var(--text-dim); line-height:1.4;
+  }
+  .country-result b{color:var(--text); font-weight:600;}
+
+  /* ---------- ACTIONS ---------- */
+  .actions{
+    padding:26px 40px; display:flex; align-items:center; gap:24px;
+  }
+  .presave{
+    display:inline-flex; align-items:center; gap:10px;
+    background:var(--green); color:#000000;
+    border:none; border-radius:500px;
+    padding:14px 30px;
+    font-size:16px; font-weight:700;
+    cursor:pointer;
+    transition:transform .1s ease, background .15s ease;
+  }
+  .presave:hover{transform:scale(1.03); background:#22e065;}
+  .presave.saved{background:#121212; color:var(--green); border:1px solid #535353;}
+  .presave .icon-circle{
+    width:22px; height:22px; border-radius:50%;
+    border:2px solid currentColor;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .dots{
+    width:36px; height:36px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    color:var(--text-dim); cursor:default;
+  }
+
+  /* ---------- TRACKLIST ---------- */
+  .tracklist{padding:8px 40px 60px;}
+  .tracklist h2{font-size:22px; font-weight:700; margin:0 0 18px;}
+  .tl-head{
+    display:grid; grid-template-columns:36px 1fr 60px;
+    gap:12px; padding:0 12px 8px; border-bottom:1px solid var(--line);
+    color:var(--text-dim); font-size:13px;
+  }
+  .tl-row{
+    display:grid; grid-template-columns:36px 1fr 60px;
+    gap:12px; align-items:center; padding:12px;
+    border-radius:4px;
+  }
+  .tl-row:hover{background:rgba(255,255,255,0.07);}
+  .tl-idx{color:var(--text-dim); font-variant-numeric:tabular-nums;}
+  .tl-song .name{font-weight:400; font-size:16px; color:var(--text);}
+  .tl-song .by{font-size:14px; color:var(--text-dim); margin-top:2px;}
+  .tl-time{color:var(--text-dim); font-size:14px; text-align:right; font-variant-numeric:tabular-nums;}
+
+  @media (max-width:560px){
+    .hero{padding:36px 20px 24px;}
+    .actions,.tracklist{padding-left:20px; padding-right:20px;}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="cover">
+        <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="#8a8a8a" stroke-width="1.5">
+          <path d="M9 18V5l12-2v13" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="6" cy="18" r="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="18" cy="16" r="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <div class="meta">
+        <p class="eyebrow">Sencillo</p>
+        <h1 class="title">Me Rompe</h1>
+        <div class="artist-row">
+          <span class="artist-avatar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#c7c7c7" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6" stroke-linecap="round"/></svg>
+          </span>
+          <a class="artist-link" href="https://www.youtube.com/@MatysitoFlowBakan0c/" target="_blank" rel="noopener noreferrer">MatysitoFlowBakan0</a>
+          <span class="dot">•</span>
+          <span>Se publica el 12 de julio de 2026</span>
+        </div>
+
+        <div class="release-row">
+          <div class="countdown" id="countdown">
+            <div class="cell"><div class="num" id="cd-days">00</div><div class="label">Días</div></div>
+            <div class="cell"><div class="num" id="cd-hours">00</div><div class="label">Horas</div></div>
+            <div class="cell"><div class="num" id="cd-mins">00</div><div class="label">Minutos</div></div>
+            <div class="cell"><div class="num" id="cd-secs">00</div><div class="label">Segundos</div></div>
+          </div>
+
+          <div class="country-card">
+            <div class="q">¿De qué país eres?</div>
+            <select class="country-select" id="country-select"></select>
+            <div class="country-result" id="country-result"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="presave" id="presave-btn">
+      <span id="presave-label">Preguardar</span>
+      <span class="icon-circle">
+        <svg id="presave-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+      </span>
+    </button>
+    <span class="dots">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+    </span>
+  </div>
+
+  <div class="tracklist">
+    <h2>Vista previa de la lista de canciones</h2>
+    <div class="tl-head">
+      <div>#</div>
+      <div>Título</div>
+      <div style="text-align:right;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+      </div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-idx">1</div>
+      <div class="tl-song">
+        <div class="name">Me Rompe [Explicit]</div>
+        <div class="by">MatysitoFlowBakan0</div>
+      </div>
+      <div class="tl-time">2:58</div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-idx">2</div>
+      <div class="tl-song">
+        <div class="name">Me Rompe (Clean)</div>
+        <div class="by">MatysitoFlowBakan0</div>
+      </div>
+      <div class="tl-time">2:58</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ---- Fecha/hora de lanzamiento: 12 de julio de 2026, 9:00 PM hora de Ciudad de México (UTC-6) ----
+  const RELEASE_UTC = Date.UTC(2026, 6, 13, 3, 0, 0); // = 12 jul 2026 21:00 America/Mexico_City
+
+  // ---- Countdown funcional (mismo instante para todos, independiente del país) ----
+  function pad(n){ return String(n).padStart(2,'0'); }
+  function tick(){
+    const now = Date.now();
+    let diff = RELEASE_UTC - now;
+    if (diff < 0) diff = 0;
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins = Math.floor((diff % 3600000) / 60000);
+    const secs = Math.floor((diff % 60000) / 1000);
+    document.getElementById('cd-days').textContent = pad(days);
+    document.getElementById('cd-hours').textContent = pad(hours);
+    document.getElementById('cd-mins').textContent = pad(mins);
+    document.getElementById('cd-secs').textContent = pad(secs);
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  // ---- Lista de países: [nombre en español, código ISO, zona horaria IANA] ----
+  const COUNTRIES = [["Afganistán","AF","Asia/Kabul"],["Albania","AL","Europe/Tirane"],["Alemania","DE","Europe/Berlin"],["Andorra","AD","Europe/Andorra"],["Angola","AO","Africa/Luanda"],["Anguila","AI","America/Anguilla"],["Antigua y Barbuda","AG","America/Antigua"],["Antártida","AQ","Antarctica/McMurdo"],["Arabia Saudí","SA","Asia/Riyadh"],["Argelia","DZ","Africa/Algiers"],["Argentina","AR","America/Argentina/Buenos_Aires"],["Armenia","AM","Asia/Yerevan"],["Aruba","AW","America/Aruba"],["Australia","AU","Australia/Sydney"],["Austria","AT","Europe/Vienna"],["Azerbaiyán","AZ","Asia/Baku"],["Bahamas","BS","America/Nassau"],["Bangladés","BD","Asia/Dhaka"],["Barbados","BB","America/Barbados"],["Baréin","BH","Asia/Bahrain"],["Belice","BZ","America/Belize"],["Benín","BJ","Africa/Porto-Novo"],["Bermudas","BM","Atlantic/Bermuda"],["Bielorrusia","BY","Europe/Minsk"],["Bolivia","BO","America/La_Paz"],["Bosnia y Herzegovina","BA","Europe/Sarajevo"],["Botsuana","BW","Africa/Gaborone"],["Brasil","BR","America/Sao_Paulo"],["Brunéi","BN","Asia/Brunei"],["Bulgaria","BG","Europe/Sofia"],["Burkina Faso","BF","Africa/Ouagadougou"],["Burundi","BI","Africa/Bujumbura"],["Bután","BT","Asia/Thimphu"],["Bélgica","BE","Europe/Brussels"],["Cabo Verde","CV","Atlantic/Cape_Verde"],["Camboya","KH","Asia/Phnom_Penh"],["Camerún","CM","Africa/Douala"],["Canadá","CA","America/Toronto"],["Caribe neerlandés","BQ","America/Kralendijk"],["Catar","QA","Asia/Qatar"],["Chad","TD","Africa/Ndjamena"],["Chequia","CZ","Europe/Prague"],["Chile","CL","America/Santiago"],["China","CN","Asia/Shanghai"],["Chipre","CY","Asia/Nicosia"],["Ciudad del Vaticano","VA","Europe/Vatican"],["Colombia","CO","America/Bogota"],["Comoras","KM","Indian/Comoro"],["Congo","CG","Africa/Brazzaville"],["Corea del Norte","KP","Asia/Pyongyang"],["Corea del Sur","KR","Asia/Seoul"],["Costa Rica","CR","America/Costa_Rica"],["Croacia","HR","Europe/Zagreb"],["Cuba","CU","America/Havana"],["Curazao","CW","America/Curacao"],["Côte d’Ivoire","CI","Africa/Abidjan"],["Dinamarca","DK","Europe/Copenhagen"],["Dominica","DM","America/Dominica"],["Ecuador","EC","America/Guayaquil"],["Egipto","EG","Africa/Cairo"],["El Salvador","SV","America/El_Salvador"],["Emiratos Árabes Unidos","AE","Asia/Dubai"],["Eritrea","ER","Africa/Asmara"],["Eslovaquia","SK","Europe/Bratislava"],["Eslovenia","SI","Europe/Ljubljana"],["España","ES","Europe/Madrid"],["Estados Unidos","US","America/New_York"],["Estonia","EE","Europe/Tallinn"],["Esuatini","SZ","Africa/Mbabane"],["Etiopía","ET","Africa/Addis_Ababa"],["Filipinas","PH","Asia/Manila"],["Finlandia","FI","Europe/Helsinki"],["Fiyi","FJ","Pacific/Fiji"],["Francia","FR","Europe/Paris"],["Gabón","GA","Africa/Libreville"],["Gambia","GM","Africa/Banjul"],["Georgia","GE","Asia/Tbilisi"],["Ghana","GH","Africa/Accra"],["Gibraltar","GI","Europe/Gibraltar"],["Granada","GD","America/Grenada"],["Grecia","GR","Europe/Athens"],["Groenlandia","GL","America/Nuuk"],["Guadalupe","GP","America/Guadeloupe"],["Guam","GU","Pacific/Guam"],["Guatemala","GT","America/Guatemala"],["Guayana Francesa","GF","America/Cayenne"],["Guernesey","GG","Europe/Guernsey"],["Guinea","GN","Africa/Conakry"],["Guinea Ecuatorial","GQ","Africa/Malabo"],["Guinea-Bisáu","GW","Africa/Bissau"],["Guyana","GY","America/Guyana"],["Haití","HT","America/Port-au-Prince"],["Honduras","HN","America/Tegucigalpa"],["Hungría","HU","Europe/Budapest"],["India","IN","Asia/Kolkata"],["Indonesia","ID","Asia/Jakarta"],["Irak","IQ","Asia/Baghdad"],["Irlanda","IE","Europe/Dublin"],["Irán","IR","Asia/Tehran"],["Isla Norfolk","NF","Pacific/Norfolk"],["Isla de Man","IM","Europe/Isle_of_Man"],["Isla de Navidad","CX","Indian/Christmas"],["Islandia","IS","Atlantic/Reykjavik"],["Islas Aland","AX","Europe/Mariehamn"],["Islas Caimán","KY","America/Cayman"],["Islas Cocos","CC","Indian/Cocos"],["Islas Cook","CK","Pacific/Rarotonga"],["Islas Feroe","FO","Atlantic/Faroe"],["Islas Georgia del Sur y Sandwich del Sur","GS","Atlantic/South_Georgia"],["Islas Malvinas","FK","Atlantic/Stanley"],["Islas Marianas del Norte","MP","Pacific/Saipan"],["Islas Marshall","MH","Pacific/Majuro"],["Islas Pitcairn","PN","Pacific/Pitcairn"],["Islas Salomón","SB","Pacific/Guadalcanal"],["Islas Turcas y Caicos","TC","America/Grand_Turk"],["Islas Vírgenes Británicas","VG","America/Tortola"],["Islas Vírgenes de EE. UU.","VI","America/St_Thomas"],["Islas menores alejadas de EE. UU.","UM","Pacific/Midway"],["Israel","IL","Asia/Jerusalem"],["Italia","IT","Europe/Rome"],["Jamaica","JM","America/Jamaica"],["Japón","JP","Asia/Tokyo"],["Jersey","JE","Europe/Jersey"],["Jordania","JO","Asia/Amman"],["Kazajistán","KZ","Asia/Almaty"],["Kenia","KE","Africa/Nairobi"],["Kirguistán","KG","Asia/Bishkek"],["Kiribati","KI","Pacific/Tarawa"],["Kosovo","XK","Europe/Belgrade"],["Kuwait","KW","Asia/Kuwait"],["Laos","LA","Asia/Vientiane"],["Lesoto","LS","Africa/Maseru"],["Letonia","LV","Europe/Riga"],["Liberia","LR","Africa/Monrovia"],["Libia","LY","Africa/Tripoli"],["Liechtenstein","LI","Europe/Vaduz"],["Lituania","LT","Europe/Vilnius"],["Luxemburgo","LU","Europe/Luxembourg"],["Líbano","LB","Asia/Beirut"],["Macedonia del Norte","MK","Europe/Skopje"],["Madagascar","MG","Indian/Antananarivo"],["Malasia","MY","Asia/Kuala_Lumpur"],["Malaui","MW","Africa/Blantyre"],["Maldivas","MV","Indian/Maldives"],["Mali","ML","Africa/Bamako"],["Malta","MT","Europe/Malta"],["Marruecos","MA","Africa/Casablanca"],["Martinica","MQ","America/Martinique"],["Mauricio","MU","Indian/Mauritius"],["Mauritania","MR","Africa/Nouakchott"],["Mayotte","YT","Indian/Mayotte"],["Micronesia","FM","Pacific/Pohnpei"],["Moldavia","MD","Europe/Chisinau"],["Mongolia","MN","Asia/Ulaanbaatar"],["Montenegro","ME","Europe/Podgorica"],["Montserrat","MS","America/Montserrat"],["Mozambique","MZ","Africa/Maputo"],["Myanmar (Birmania)","MM","Asia/Yangon"],["México","MX","America/Mexico_City"],["Mónaco","MC","Europe/Monaco"],["Namibia","NA","Africa/Windhoek"],["Nauru","NR","Pacific/Nauru"],["Nepal","NP","Asia/Kathmandu"],["Nicaragua","NI","America/Managua"],["Nigeria","NG","Africa/Lagos"],["Niue","NU","Pacific/Niue"],["Noruega","NO","Europe/Oslo"],["Nueva Caledonia","NC","Pacific/Noumea"],["Nueva Zelanda","NZ","Pacific/Auckland"],["Níger","NE","Africa/Niamey"],["Omán","OM","Asia/Muscat"],["Pakistán","PK","Asia/Karachi"],["Palaos","PW","Pacific/Palau"],["Panamá","PA","America/Panama"],["Papúa Nueva Guinea","PG","Pacific/Port_Moresby"],["Paraguay","PY","America/Asuncion"],["Países Bajos","NL","Europe/Amsterdam"],["Perú","PE","America/Lima"],["Polinesia Francesa","PF","Pacific/Tahiti"],["Polonia","PL","Europe/Warsaw"],["Portugal","PT","Europe/Lisbon"],["Puerto Rico","PR","America/Puerto_Rico"],["RAE de Hong Kong (China)","HK","Asia/Hong_Kong"],["RAE de Macao (China)","MO","Asia/Macau"],["Reino Unido","GB","Europe/London"],["República Centroafricana","CF","Africa/Bangui"],["República Democrática del Congo","CD","Africa/Kinshasa"],["República Dominicana","DO","America/Santo_Domingo"],["Reunión","RE","Indian/Reunion"],["Ruanda","RW","Africa/Kigali"],["Rumanía","RO","Europe/Bucharest"],["Rusia","RU","Europe/Moscow"],["Samoa","WS","Pacific/Apia"],["Samoa Americana","AS","Pacific/Pago_Pago"],["San Bartolomé","BL","America/St_Barthelemy"],["San Cristóbal y Nieves","KN","America/St_Kitts"],["San Marino","SM","Europe/San_Marino"],["San Martín","MF","America/Marigot"],["San Pedro y Miquelón","PM","America/Miquelon"],["San Vicente y las Granadinas","VC","America/St_Vincent"],["Santa Elena","SH","Atlantic/St_Helena"],["Santa Lucía","LC","America/St_Lucia"],["Santo Tomé y Príncipe","ST","Africa/Sao_Tome"],["Senegal","SN","Africa/Dakar"],["Serbia","RS","Europe/Belgrade"],["Seychelles","SC","Indian/Mahe"],["Sierra Leona","SL","Africa/Freetown"],["Singapur","SG","Asia/Singapore"],["Sint Maarten","SX","America/Lower_Princes"],["Siria","SY","Asia/Damascus"],["Somalia","SO","Africa/Mogadishu"],["Sri Lanka","LK","Asia/Colombo"],["Sudáfrica","ZA","Africa/Johannesburg"],["Sudán","SD","Africa/Khartoum"],["Sudán del Sur","SS","Africa/Juba"],["Suecia","SE","Europe/Stockholm"],["Suiza","CH","Europe/Zurich"],["Surinam","SR","America/Paramaribo"],["Svalbard y Jan Mayen","SJ","Arctic/Longyearbyen"],["Sáhara Occidental","EH","Africa/El_Aaiun"],["Tailandia","TH","Asia/Bangkok"],["Taiwán","TW","Asia/Taipei"],["Tanzania","TZ","Africa/Dar_es_Salaam"],["Tayikistán","TJ","Asia/Dushanbe"],["Territorio Británico del Océano Índico","IO","Indian/Chagos"],["Territorios Australes Franceses","TF","Indian/Kerguelen"],["Territorios Palestinos","PS","Asia/Gaza"],["Timor-Leste","TL","Asia/Dili"],["Togo","TG","Africa/Lome"],["Tokelau","TK","Pacific/Fakaofo"],["Tonga","TO","Pacific/Tongatapu"],["Trinidad y Tobago","TT","America/Port_of_Spain"],["Turkmenistán","TM","Asia/Ashgabat"],["Turquía","TR","Europe/Istanbul"],["Tuvalu","TV","Pacific/Funafuti"],["Túnez","TN","Africa/Tunis"],["Ucrania","UA","Europe/Kyiv"],["Uganda","UG","Africa/Kampala"],["Uruguay","UY","America/Montevideo"],["Uzbekistán","UZ","Asia/Samarkand"],["Vanuatu","VU","Pacific/Efate"],["Venezuela","VE","America/Caracas"],["Vietnam","VN","Asia/Ho_Chi_Minh"],["Wallis y Futuna","WF","Pacific/Wallis"],["Yemen","YE","Asia/Aden"],["Yibuti","DJ","Africa/Djibouti"],["Zambia","ZM","Africa/Lusaka"],["Zimbabue","ZW","Africa/Harare"]];
+
+  const select = document.getElementById('country-select');
+  COUNTRIES.forEach(([name, code, tz]) => {
+    const opt = document.createElement('option');
+    opt.value = tz;
+    opt.textContent = name;
+    opt.dataset.name = name;
+    if (code === 'MX') opt.selected = true;
+    select.appendChild(opt);
+  });
+
+  const resultEl = document.getElementById('country-result');
+  function updateCountryTime(){
+    const opt = select.options[select.selectedIndex];
+    const tz = opt.value;
+    const name = opt.dataset.name;
+    const releaseDate = new Date(RELEASE_UTC);
+    let formatted;
+    try {
+      formatted = new Intl.DateTimeFormat('es-MX', {
+        timeZone: tz,
+        day: 'numeric',
+        month: 'long',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      }).format(releaseDate);
+    } catch(e){
+      formatted = '12 de julio, 9:00 p. m.';
+    }
+    resultEl.innerHTML = 'En <b>' + name + '</b> se estrena el ' + formatted + '.';
+  }
+  select.addEventListener('change', updateCountryTime);
+  updateCountryTime();
+
+  // ---- Botón Preguardar (visual) ----
+  const btn = document.getElementById('presave-btn');
+  const label = document.getElementById('presave-label');
+  let saved = false;
+  btn.addEventListener('click', () => {
+    saved = !saved;
+    btn.classList.toggle('saved', saved);
+    label.textContent = saved ? 'Preguardado' : 'Preguardar';
+  });
+</script>
+</body>
+</html>
