@@ -15,6 +15,9 @@
     --green: #1ed760;
   }
 
+  /* SOLUCIÓN AL ERROR VISUAL */
+  [hidden] { display: none !important; }
+
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   a:focus-visible, button:focus-visible, select:focus-visible{
@@ -178,6 +181,15 @@
   }
   .country-result b{color:var(--text); font-weight:600;}
 
+  /* ANIMACIÓN AL CAMBIAR DE PAÍS */
+  .anim-update {
+    animation: pop-update 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+  }
+  @keyframes pop-update {
+    0% { transform: scale(0.92); opacity: 0; filter: blur(2px); }
+    100% { transform: scale(1); opacity: 1; filter: blur(0); }
+  }
+
   /* ---------- ACTIONS ---------- */
   .actions{
     padding:26px 40px; display:flex; align-items:center; gap:24px;
@@ -216,6 +228,7 @@
     display:grid; grid-template-columns:36px 1fr 60px;
     gap:12px; align-items:center; padding:12px;
     border-radius:4px;
+    transition: background-color 0.3s ease;
   }
   .tl-row:hover{background:rgba(255,255,255,0.07);}
   .tl-idx{
@@ -227,20 +240,35 @@
     display:none; align-items:center; justify-content:center;
     position:absolute; inset:0; color:var(--text);
   }
-  .tl-row:hover .idx-num{display:none;}
-  .tl-row:hover .idx-play{display:flex;}
-  .tl-song .name{font-weight:400; font-size:16px; margin:0;}
+  
+  /* Lógica normal de hover (solo cuando NO está bloqueada) */
+  .tl-row:not(.locked):hover .idx-num{display:none;}
+  .tl-row:not(.locked):hover .idx-play{display:flex;}
+  
+  .tl-song .name{font-weight:400; font-size:16px; margin:0; transition: color 0.3s;}
   .tl-song .name a{color:var(--text); text-decoration:none;}
   .tl-song .name a:hover{text-decoration:underline;}
-  .tl-song .by{font-size:14px; margin-top:2px;}
+  .tl-song .by{font-size:14px; margin-top:2px; transition: color 0.3s;}
   .tl-song .by a{color:var(--text-dim); text-decoration:none;}
   .tl-song .by a:hover{color:var(--text); text-decoration:underline;}
-  .tl-time{color:var(--text-dim); font-size:14px; text-align:right; font-variant-numeric:tabular-nums;}
+  .tl-time{color:var(--text-dim); font-size:14px; text-align:right; font-variant-numeric:tabular-nums; transition: opacity 0.3s;}
 
+  /* ESTADO BLOQUEADO */
   .tl-row.locked .name{color:var(--text-dim);}
   .tl-row.locked .by{color:var(--text-dim); opacity:.75;}
   .tl-row.locked .tl-time{opacity:.7;}
   .tl-row.locked .idx-num{opacity:.75;}
+  .tl-row.locked .idx-play{display:none !important;}
+
+  /* ANIMACIÓN DE DESBLOQUEO (Flash blanco) */
+  .unlock-flash {
+    animation: flash-white 1.5s ease-out forwards;
+  }
+  @keyframes flash-white {
+    0%   { background-color: rgba(255, 255, 255, 0); }
+    20%  { background-color: rgba(255, 255, 255, 0.3); }
+    100% { background-color: rgba(255, 255, 255, 0); }
+  }
 
   @media (max-width:560px){
     .hero{padding:36px 20px 24px;}
@@ -266,7 +294,7 @@
           </span>
           <a class="artist-link" href="https://www.youtube.com/@MatysitoFlowBakan0c/" target="_blank" rel="noopener noreferrer">MatysitoFlowBakan0</a>
           <span class="dot">•</span>
-          <span id="date-line">Se publica el 12 de julio de 2026</span>
+          <span id="date-line">Se publica el 12 de julio de 2026 (Hora Local)</span>
         </div>
 
         <div class="release-row">
@@ -336,25 +364,28 @@
       </div>
       <div class="tl-time">3:16</div>
     </div>
+    
+    <!-- CANCIÓN 3 (Dinámica) -->
     <div class="tl-row locked" id="track3-row">
-      <div class="tl-idx"><span class="idx-num">3</span></div>
-      <div class="tl-song">
-        <div class="name">Me Rompe (8D)</div>
-        <div class="by">MatysitoFlowBakan0</div>
+      <div class="tl-idx" id="track3-idx">
+        <span class="idx-num">3</span>
+        <!-- El botón de play se insertará aquí dinámicamente -->
       </div>
-      <div class="tl-time">-:--</div>
+      <div class="tl-song" id="track3-song">
+        <div class="name" id="track3-name">Me Rompe (8D)</div>
+        <div class="by" id="track3-by">MatysitoFlowBakan0</div>
+      </div>
+      <div class="tl-time" id="track3-time">-:--</div>
     </div>
   </div>
 
 </div>
 
 <script>
-  // ---- Fecha/hora de lanzamiento: 12 de julio de 2026, 9:00 PM hora de Ciudad de México (UTC-6) ----
-  // Este es el instante absoluto real del lanzamiento (no cambia).
-  const RELEASE_UTC = Date.UTC(2026, 6, 13, 3, 0, 0); // = 12 jul 2026 21:00 America/Mexico_City
-
-  // ---- El álbum completo (con la 3ra canción) sube una hora después: 10:00 PM hora de México ----
-  const FULL_RELEASE_UTC = Date.UTC(2026, 6, 13, 4, 0, 0); // = 12 jul 2026 22:00 America/Mexico_City
+  // ---- Fecha de lanzamiento: 12 de julio de 2026 ----
+  const REL_YEAR = 2026;
+  const REL_MONTH = 6; // Julio (0 es enero, 6 es julio)
+  const REL_DAY = 12;
 
   // ---- Lista de países: [nombre en español, código ISO, zona horaria IANA] ----
   const COUNTRIES = [["Afganistán","AF","Asia/Kabul"],["Albania","AL","Europe/Tirane"],["Alemania","DE","Europe/Berlin"],["Andorra","AD","Europe/Andorra"],["Angola","AO","Africa/Luanda"],["Anguila","AI","America/Anguilla"],["Antigua y Barbuda","AG","America/Antigua"],["Antártida","AQ","Antarctica/McMurdo"],["Arabia Saudí","SA","Asia/Riyadh"],["Argelia","DZ","Africa/Algiers"],["Argentina","AR","America/Argentina/Buenos_Aires"],["Armenia","AM","Asia/Yerevan"],["Aruba","AW","America/Aruba"],["Australia","AU","Australia/Sydney"],["Austria","AT","Europe/Vienna"],["Azerbaiyán","AZ","Asia/Baku"],["Bahamas","BS","America/Nassau"],["Bangladés","BD","Asia/Dhaka"],["Barbados","BB","America/Barbados"],["Baréin","BH","Asia/Bahrain"],["Belice","BZ","America/Belize"],["Benín","BJ","Africa/Porto-Novo"],["Bermudas","BM","Atlantic/Bermuda"],["Bielorrusia","BY","Europe/Minsk"],["Bolivia","BO","America/La_Paz"],["Bosnia y Herzegovina","BA","Europe/Sarajevo"],["Botsuana","BW","Africa/Gaborone"],["Brasil","BR","America/Sao_Paulo"],["Brunéi","BN","Asia/Brunei"],["Bulgaria","BG","Europe/Sofia"],["Burkina Faso","BF","Africa/Ouagadougou"],["Burundi","BI","Africa/Bujumbura"],["Bután","BT","Asia/Thimphu"],["Bélgica","BE","Europe/Brussels"],["Cabo Verde","CV","Atlantic/Cape_Verde"],["Camboya","KH","Asia/Phnom_Penh"],["Camerún","CM","Africa/Douala"],["Canadá","CA","America/Toronto"],["Caribe neerlandés","BQ","America/Kralendijk"],["Catar","QA","Asia/Qatar"],["Chad","TD","Africa/Ndjamena"],["Chequia","CZ","Europe/Prague"],["Chile","CL","America/Santiago"],["China","CN","Asia/Shanghai"],["Chipre","CY","Asia/Nicosia"],["Ciudad del Vaticano","VA","Europe/Vatican"],["Colombia","CO","America/Bogota"],["Comoras","KM","Indian/Comoro"],["Congo","CG","Africa/Brazzaville"],["Corea del Norte","KP","Asia/Pyongyang"],["Corea del Sur","KR","Asia/Seoul"],["Costa Rica","CR","America/Costa_Rica"],["Croacia","HR","Europe/Zagreb"],["Cuba","CU","America/Havana"],["Curazao","CW","America/Curacao"],["Côte d’Ivoire","CI","Africa/Abidjan"],["Dinamarca","DK","Europe/Copenhagen"],["Dominica","DM","America/Dominica"],["Ecuador","EC","America/Guayaquil"],["Egipto","EG","Africa/Cairo"],["El Salvador","SV","America/El_Salvador"],["Emiratos Árabes Unidos","AE","Asia/Dubai"],["Eritrea","ER","Africa/Asmara"],["Eslovaquia","SK","Europe/Bratislava"],["Eslovenia","SI","Europe/Ljubljana"],["España","ES","Europe/Madrid"],["Estados Unidos","US","America/New_York"],["Estonia","EE","Europe/Tallinn"],["Esuatini","SZ","Africa/Mbabane"],["Etiopía","ET","Africa/Addis_Ababa"],["Filipinas","PH","Asia/Manila"],["Finlandia","FI","Europe/Helsinki"],["Fiyi","FJ","Pacific/Fiji"],["Francia","FR","Europe/Paris"],["Gabón","GA","Africa/Libreville"],["Gambia","GM","Africa/Banjul"],["Georgia","GE","Asia/Tbilisi"],["Ghana","GH","Africa/Accra"],["Gibraltar","GI","Europe/Gibraltar"],["Granada","GD","America/Grenada"],["Grecia","GR","Europe/Athens"],["Groenlandia","GL","America/Nuuk"],["Guadalupe","GP","America/Guadeloupe"],["Guam","GU","Pacific/Guam"],["Guatemala","GT","America/Guatemala"],["Guayana Francesa","GF","America/Cayenne"],["Guernesey","GG","Europe/Guernsey"],["Guinea","GN","Africa/Conakry"],["Guinea Ecuatorial","GQ","Africa/Malabo"],["Guinea-Bisáu","GW","Africa/Bissau"],["Guyana","GY","America/Guyana"],["Haití","HT","America/Port-au-Prince"],["Honduras","HN","America/Tegucigalpa"],["Hungría","HU","Europe/Budapest"],["India","IN","Asia/Kolkata"],["Indonesia","ID","Asia/Jakarta"],["Irak","IQ","Asia/Baghdad"],["Irlanda","IE","Europe/Dublin"],["Irán","IR","Asia/Tehran"],["Isla Norfolk","NF","Pacific/Norfolk"],["Isla de Man","IM","Europe/Isle_of_Man"],["Isla de Navidad","CX","Indian/Christmas"],["Islandia","IS","Atlantic/Reykjavik"],["Islas Aland","AX","Europe/Mariehamn"],["Islas Caimán","KY","America/Cayman"],["Islas Cocos","CC","Indian/Cocos"],["Islas Cook","CK","Pacific/Rarotonga"],["Islas Feroe","FO","Atlantic/Faroe"],["Islas Georgia del Sur y Sandwich del Sur","GS","Atlantic/South_Georgia"],["Islas Malvinas","FK","Atlantic/Stanley"],["Islas Marianas del Norte","MP","Pacific/Saipan"],["Islas Marshall","MH","Pacific/Majuro"],["Islas Pitcairn","PN","Pacific/Pitcairn"],["Islas Salomón","SB","Pacific/Guadalcanal"],["Islas Turcas y Caicos","TC","America/Grand_Turk"],["Islas Vírgenes Británicas","VG","America/Tortola"],["Islas Vírgenes de EE. UU.","VI","America/St_Thomas"],["Islas menores alejadas de EE. UU.","UM","Pacific/Midway"],["Israel","IL","Asia/Jerusalem"],["Italia","IT","Europe/Rome"],["Jamaica","JM","America/Jamaica"],["Japón","JP","Asia/Tokyo"],["Jersey","JE","Europe/Jersey"],["Jordania","JO","Asia/Amman"],["Kazajistán","KZ","Asia/Almaty"],["Kenia","KE","Africa/Nairobi"],["Kirguistán","KG","Asia/Bishkek"],["Kiribati","KI","Pacific/Tarawa"],["Kosovo","XK","Europe/Belgrade"],["Kuwait","KW","Asia/Kuwait"],["Laos","LA","Asia/Vientiane"],["Lesoto","LS","Africa/Maseru"],["Letonia","LV","Europe/Riga"],["Liberia","LR","Africa/Monrovia"],["Libia","LY","Africa/Tripoli"],["Liechtenstein","LI","Europe/Vaduz"],["Lituania","LT","Europe/Vilnius"],["Luxemburgo","LU","Europe/Luxembourg"],["Líbano","LB","Asia/Beirut"],["Macedonia del Norte","MK","Europe/Skopje"],["Madagascar","MG","Indian/Antananarivo"],["Malasia","MY","Asia/Kuala_Lumpur"],["Malaui","MW","Africa/Blantyre"],["Maldivas","MV","Indian/Maldives"],["Mali","ML","Africa/Bamako"],["Malta","MT","Europe/Malta"],["Marruecos","MA","Africa/Casablanca"],["Martinica","MQ","America/Martinique"],["Mauricio","MU","Indian/Mauritius"],["Mauritania","MR","Africa/Nouakchott"],["Mayotte","YT","Indian/Mayotte"],["Micronesia","FM","Pacific/Pohnpei"],["Moldavia","MD","Europe/Chisinau"],["Mongolia","MN","Asia/Ulaanbaatar"],["Montenegro","ME","Europe/Podgorica"],["Montserrat","MS","America/Montserrat"],["Mozambique","MZ","Africa/Maputo"],["Myanmar (Birmania)","MM","Asia/Yangon"],["México","MX","America/Mexico_City"],["Mónaco","MC","Europe/Monaco"],["Namibia","NA","Africa/Windhoek"],["Nauru","NR","Pacific/Nauru"],["Nepal","NP","Asia/Kathmandu"],["Nicaragua","NI","America/Managua"],["Nigeria","NG","Africa/Lagos"],["Niue","NU","Pacific/Niue"],["Noruega","NO","Europe/Oslo"],["Nueva Caledonia","NC","Pacific/Noumea"],["Nueva Zelanda","NZ","Pacific/Auckland"],["Níger","NE","Africa/Niamey"],["Omán","OM","Asia/Muscat"],["Pakistán","PK","Asia/Karachi"],["Palaos","PW","Pacific/Palau"],["Panamá","PA","America/Panama"],["Papúa Nueva Guinea","PG","Pacific/Port_Moresby"],["Paraguay","PY","America/Asuncion"],["Países Bajos","NL","Europe/Amsterdam"],["Perú","PE","America/Lima"],["Polinesia Francesa","PF","Pacific/Tahiti"],["Polonia","PL","Europe/Warsaw"],["Portugal","PT","Europe/Lisbon"],["Puerto Rico","PR","America/Puerto_Rico"],["RAE de Hong Kong (China)","HK","Asia/Hong_Kong"],["RAE de Macao (China)","MO","Asia/Macau"],["Reino Unido","GB","Europe/London"],["República Centroafricana","CF","Africa/Bangui"],["República Democrática del Congo","CD","Africa/Kinshasa"],["República Dominicana","DO","America/Santo_Domingo"],["Reunión","RE","Indian/Reunion"],["Ruanda","RW","Africa/Kigali"],["Rumanía","RO","Europe/Bucharest"],["Rusia","RU","Europe/Moscow"],["Samoa","WS","Pacific/Apia"],["Samoa Americana","AS","Pacific/Pago_Pago"],["San Bartolomé","BL","America/St_Barthelemy"],["San Cristóbal y Nieves","KN","America/St_Kitts"],["San Marino","SM","Europe/San_Marino"],["San Martín","MF","America/Marigot"],["San Pedro y Miquelón","PM","America/Miquelon"],["San Vicente y las Granadinas","VC","America/St_Vincent"],["Santa Elena","SH","Atlantic/St_Helena"],["Santa Lucía","LC","America/St_Lucia"],["Santo Tomé y Príncipe","ST","Africa/Sao_Tome"],["Senegal","SN","Africa/Dakar"],["Serbia","RS","Europe/Belgrade"],["Seychelles","SC","Indian/Mahe"],["Sierra Leona","SL","Africa/Freetown"],["Singapur","SG","Asia/Singapore"],["Sint Maarten","SX","America/Lower_Princes"],["Siria","SY","Asia/Damascus"],["Somalia","SO","Africa/Mogadishu"],["Sri Lanka","LK","Asia/Colombo"],["Sudáfrica","ZA","Africa/Johannesburg"],["Sudán","SD","Africa/Khartoum"],["Sudán del Sur","SS","Africa/Juba"],["Suecia","SE","Europe/Stockholm"],["Suiza","CH","Europe/Zurich"],["Surinam","SR","America/Paramaribo"],["Svalbard y Jan Mayen","SJ","Arctic/Longyearbyen"],["Sáhara Occidental","EH","Africa/El_Aaiun"],["Tailandia","TH","Asia/Bangkok"],["Taiwán","TW","Asia/Taipei"],["Tanzania","TZ","Africa/Dar_es_Salaam"],["Tayikistán","TJ","Asia/Dushanbe"],["Territorio Británico del Océano Índico","IO","Indian/Chagos"],["Territorios Australes Franceses","TF","Indian/Kerguelen"],["Territorios Palestinos","PS","Asia/Gaza"],["Timor-Leste","TL","Asia/Dili"],["Togo","TG","Africa/Lome"],["Tokelau","TK","Pacific/Fakaofo"],["Tonga","TO","Pacific/Tongatapu"],["Trinidad y Tobago","TT","America/Port_of_Spain"],["Turkmenistán","TM","Asia/Ashgabat"],["Turquía","TR","Europe/Istanbul"],["Tuvalu","TV","Pacific/Funafuti"],["Túnez","TN","Africa/Tunis"],["Ucrania","UA","Europe/Kyiv"],["Uganda","UG","Africa/Kampala"],["Uruguay","UY","America/Montevideo"],["Uzbekistán","UZ","Asia/Samarkand"],["Vanuatu","VU","Pacific/Efate"],["Venezuela","VE","America/Caracas"],["Vietnam","VN","Asia/Ho_Chi_Minh"],["Wallis y Futuna","WF","Pacific/Wallis"],["Yemen","YE","Asia/Aden"],["Yibuti","DJ","Africa/Djibouti"],["Zambia","ZM","Africa/Lusaka"],["Zimbabue","ZW","Africa/Harare"]];
@@ -371,107 +402,163 @@
 
   function pad(n){ return String(n).padStart(2,'0'); }
 
-  // Diferencia (en minutos) entre la zona horaria elegida y la zona horaria
-  // del propio navegador, calculada comparando cómo formatea cada una el
-  // mismo instante. Con eso "reloqueamos" el countdown a la hora local del
-  // país elegido, aunque el instante real de estreno sigue siendo el mismo.
-  function tzOffsetMinutes(date, timeZone){
-    const dtf = new Intl.DateTimeFormat('en-US', {
-      timeZone, hourCycle:'h23',
-      year:'numeric', month:'2-digit', day:'2-digit',
-      hour:'2-digit', minute:'2-digit', second:'2-digit'
-    });
-    const parts = dtf.formatToParts(date).reduce((acc,p)=>{acc[p.type]=p.value; return acc;},{});
-    const asUTC = Date.UTC(parts.year, parts.month-1, parts.day, parts.hour, parts.minute, parts.second);
-    return (asUTC - date.getTime()) / 60000;
-  }
-
-  let selectedTz = select.value; // 'America/Mexico_City' por defecto
+  let selectedTz = select.value; 
 
   const resultEl = document.getElementById('country-result');
   const dateLineEl = document.getElementById('date-line');
   const countdownEl = document.getElementById('countdown');
   const liveBadgeEl = document.getElementById('live-badge');
-
-  function diffForSelected(now, releaseInstant){
-    // Diferencia entre la zona del país elegido y la zona local del navegador,
-    // aplicada a "ahora" para saber qué hora es "ahora" en ese país,
-    // y así contamos hacia el mismo instante de estreno pero visto desde esa zona.
-    const nowLocalOffset = -now.getTimezoneOffset(); // min respecto a UTC, zona del navegador
-    const nowTargetOffset = tzOffsetMinutes(now, selectedTz); // min respecto a UTC, país elegido
-    const shiftMs = (nowTargetOffset - nowLocalOffset) * 60000;
-    const nowShifted = now.getTime() + shiftMs;
-    return releaseInstant - nowShifted; // negativo = ya se lanzó ahí
-  }
-
-  function updateCountryLabel(rawDiff){
-    const opt = select.options[select.selectedIndex];
-    const name = opt.dataset.name;
-    let formatted;
-    try {
-      formatted = new Intl.DateTimeFormat('es-MX', {
-        timeZone: selectedTz, day:'numeric', month:'long',
-        hour:'numeric', minute:'2-digit', hour12:true
-      }).format(new Date(RELEASE_UTC));
-    } catch(e){
-      formatted = '12 de julio, 9:00 p. m.';
-    }
-    const verb = rawDiff <= 0 ? 'salió' : 'se estrena';
-    resultEl.innerHTML = 'En <b>' + name + '</b> ' + verb + ' el ' + formatted + '.';
-  }
-
   const track3RowEl = document.getElementById('track3-row');
 
-  function tick() {
-  const now = new Date();
+  // Elementos de la canción 3 para actualizarlos dinámicamente
+  const t3Idx = document.getElementById('track3-idx');
+  const t3Name = document.getElementById('track3-name');
+  const t3By = document.getElementById('track3-by');
+  const t3Time = document.getElementById('track3-time');
 
-  const singleDiff = diffForSelected(now, RELEASE_UTC);
-  const fullDiff = diffForSelected(now, FULL_RELEASE_UTC);
+  let wasFullyLaunched = false; // Variable para saber si ya animamos la pista 3
 
-  const singleReleased = singleDiff <= 0;
-  const fullReleased = fullDiff <= 0;
-
-  // ¿Qué cuenta mostramos?
-  const currentDiff = !singleReleased
-      ? singleDiff
-      : !fullReleased
-      ? fullDiff
-      : 0;
-
-  const days = Math.floor(currentDiff / 86400000);
-  const hours = Math.floor((currentDiff % 86400000) / 3600000);
-  const mins = Math.floor((currentDiff % 3600000) / 60000);
-  const secs = Math.floor((currentDiff % 60000) / 1000);
-
-  document.getElementById("cd-days").textContent = pad(days);
-  document.getElementById("cd-hours").textContent = pad(hours);
-  document.getElementById("cd-mins").textContent = pad(mins);
-  document.getElementById("cd-secs").textContent = pad(secs);
-
-  if (!singleReleased) {
-    // Antes del sencillo
-    countdownEl.hidden = false;
-    liveBadgeEl.hidden = true;
-    liveBadgeEl.innerHTML = '<span class="live-dot"></span> Ya disponible';
-    dateLineEl.textContent = "Se publica el 12 de julio de 2026";
-  } else if (!fullReleased) {
-    // Entre 9:00 y 10:00 PM
-    countdownEl.hidden = false;
-    liveBadgeEl.hidden = true;
-    dateLineEl.textContent = "El álbum completo se lanza a las 10:00 PM (México)";
-  } else {
-    // Álbum completo disponible
-    countdownEl.hidden = true;
-    liveBadgeEl.hidden = false;
-    liveBadgeEl.innerHTML =
-      '<span class="live-dot"></span> Álbum completo disponible';
-    dateLineEl.textContent = "Álbum completo disponible";
+  // Calcula cuánto falta para una hora específica en la zona horaria elegida
+  function getDiffForCountry(tz, targetHour){
+    const now = new Date();
+    const dtf = new Intl.DateTimeFormat('en-US', {
+      timeZone: tz, hourCycle: 'h23',
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', second: '2-digit'
+    });
+    const parts = dtf.formatToParts(now).reduce((acc,p)=>{acc[p.type]=p.value; return acc;},{});
+    
+    const currentInTz = new Date(parts.year, parts.month-1, parts.day, parts.hour, parts.minute, parts.second).getTime();
+    const targetLocal = new Date(REL_YEAR, REL_MONTH, REL_DAY, targetHour, 0, 0).getTime();
+    
+    return targetLocal - currentInTz; 
   }
 
-  track3RowEl.classList.toggle("locked", !fullReleased);
+  function updateCountryLabel(activeDiff, targetIsAlbum){
+    const opt = select.options[select.selectedIndex];
+    const name = opt.dataset.name;
+    
+    const verb = activeDiff <= 0 ? 'ya salió' : 'se estrena';
+    const type = targetIsAlbum ? 'el álbum' : 'el sencillo';
+    const timeStr = targetIsAlbum ? '10:00 p. m.' : '9:00 p. m.';
+    
+    resultEl.innerHTML = 'En <b>' + name + '</b> ' + type + ' ' + verb + ' a las ' + timeStr + ' (hora local).';
+  }
 
-  updateCountryLabel(!singleReleased ? singleDiff : fullDiff);
-}
+  // Función para desbloquear visualmente la pista 3 y poner el enlace
+  function unlockTrack3(triggerAnimation) {
+    if (!track3RowEl.classList.contains('locked')) return; // Ya está desbloqueada
+    
+    track3RowEl.classList.remove('locked');
+    
+    // Si acaba de cambiar a las 10:00 en este instante, o cambiaste a un país donde ya salió, animamos.
+    if (triggerAnimation) {
+      track3RowEl.classList.remove('unlock-flash');
+      void track3RowEl.offsetWidth; // Forzar reflow para reiniciar animación
+      track3RowEl.classList.add('unlock-flash');
+    }
+
+    // Insertar el botón de play
+    t3Idx.innerHTML = `
+      <span class="idx-num">3</span>
+      <a class="idx-play" href="https://youtu.be/udAdzocRmxY" target="_blank" rel="noopener noreferrer" aria-label="Reproducir Me Rompe 8D">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      </a>
+    `;
+
+    // Actualizar nombre con enlace
+    t3Name.innerHTML = `<a href="https://youtu.be/udAdzocRmxY" target="_blank" rel="noopener noreferrer">Me Rompe (8D)</a>`;
+    
+    // Actualizar artista con enlace
+    t3By.innerHTML = `<a href="https://www.youtube.com/@MatysitoFlowBakan0c/" target="_blank" rel="noopener noreferrer">MatysitoFlowBakan0</a>`;
+    
+    // Actualizar tiempo
+    t3Time.textContent = '3:16';
+  }
+
+  // Función para bloquear la pista 3 (si cambias de un país donde ya salió a uno donde no)
+  function lockTrack3() {
+    if (track3RowEl.classList.contains('locked')) return; // Ya está bloqueada
+    
+    track3RowEl.classList.add('locked');
+    track3RowEl.classList.remove('unlock-flash');
+
+    // Restaurar a estado bloqueado
+    t3Idx.innerHTML = `<span class="idx-num">3</span>`;
+    t3Name.textContent = 'Me Rompe (8D)';
+    t3By.textContent = 'MatysitoFlowBakan0';
+    t3Time.textContent = '-:--';
+  }
+
+  function tick(){
+    // 9:00 PM (Sencillo)
+    const singleDiff = getDiffForCountry(selectedTz, 21);
+    const singleLaunched = singleDiff <= 0;
+
+    // 10:00 PM (Álbum)
+    const fullRawDiff = getDiffForCountry(selectedTz, 22);
+    const fullyLaunched = fullRawDiff <= 0;
+    
+    // Lógica visual de la Pista 3
+    if (fullyLaunched) {
+       // Se lanza la función de desbloqueo, `wasFullyLaunched` evita que parpadee cada segundo
+       unlockTrack3(!wasFullyLaunched);
+       wasFullyLaunched = true; 
+    } else {
+       lockTrack3();
+       wasFullyLaunched = false;
+    }
+
+    // Control del contador
+    const isWaitingForAlbum = singleLaunched && !fullyLaunched;
+    const diff = fullyLaunched ? 0 : (isWaitingForAlbum ? fullRawDiff : singleDiff);
+
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins = Math.floor((diff % 3600000) / 60000);
+    const secs = Math.floor((diff % 60000) / 1000);
+    document.getElementById('cd-days').textContent = pad(days);
+    document.getElementById('cd-hours').textContent = pad(hours);
+    document.getElementById('cd-mins').textContent = pad(mins);
+    document.getElementById('cd-secs').textContent = pad(secs);
+
+    countdownEl.hidden = fullyLaunched;
+    liveBadgeEl.hidden = !fullyLaunched;
+
+    if (fullyLaunched) {
+      liveBadgeEl.innerHTML = '<span class="live-dot"></span> Álbum Disponible';
+      dateLineEl.textContent = 'El álbum se publicó el 12 de julio de 2026';
+      document.title = 'Me Rompe — MatysitoFlowBakan0 ¡Escúchalo ya!';
+    } else if (isWaitingForAlbum) {
+      dateLineEl.textContent = 'Sencillo disponible. Álbum completo a las 10:00 PM (Local)';
+      document.title = 'Me Rompe — Esperando el Álbum...';
+    } else {
+      dateLineEl.textContent = 'Se publica el 12 de julio de 2026 (Hora Local)';
+      document.title = 'Me Rompe — MatysitoFlowBakan0 (Pre Lanzamiento)';
+    }
+
+    updateCountryLabel(diff, fullyLaunched || isWaitingForAlbum);
+  }
+
+  select.addEventListener('change', () => {
+    selectedTz = select.value;
+    
+    // Forzamos que se recalcule de cero para que la animación de desbloqueo salte 
+    // si el nuevo país ya está en hora de lanzamiento.
+    wasFullyLaunched = false; 
+
+    countdownEl.classList.remove('anim-update');
+    liveBadgeEl.classList.remove('anim-update');
+    void countdownEl.offsetWidth;
+    void liveBadgeEl.offsetWidth;
+    countdownEl.classList.add('anim-update');
+    liveBadgeEl.classList.add('anim-update');
+
+    tick();
+  });
+
+  tick();
+  setInterval(tick, 1000);
 </script>
 </body>
 </html>
