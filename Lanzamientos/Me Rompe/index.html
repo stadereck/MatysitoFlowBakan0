@@ -224,6 +224,45 @@
   }
   .country-result b { color: var(--text); font-weight: 600; }
 
+  .tech-credit {
+    font-size: 11px;
+    color: var(--text-dim);
+    text-align: center;
+    margin-top: 8px;
+    font-weight: 500;
+    opacity: 0.7;
+  }
+
+  /* Splash Screen */
+  #splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--bg-base);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease;
+  }
+  
+  #splash-screen img {
+    max-width: 80%;
+    max-height: 80%;
+    transition: transform 0.6s cubic-bezier(0.8, 0, 0.2, 1);
+  }
+  
+  .splash-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  .splash-out img {
+    transform: scale(5); /* Hacerse grande de golpe */
+  }
+
   .anim-update {
     animation: pop-update 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
   }
@@ -342,6 +381,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
+
+<!-- Splash Screen -->
+<div id="splash-screen">
+  <img src="https://res.cloudinary.com/dhx58lnzb/image/upload/v1783915892/Forge_Records_Oscure_-removebg-preview_oa7eim.png" alt="Forge Records Logo">
+</div>
+
 <div class="app">
 
   <div class="hero">
@@ -379,6 +424,7 @@
               <select class="country-select" id="country-select"></select>
             </div>
             <div class="country-result" id="country-result"></div>
+            <div class="tech-credit">Con La Tecnología de Forge Records</div>
           </div>
         </div>
       </div>
@@ -448,6 +494,19 @@
 </div>
 
 <script>
+  // Splash Screen Logic
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const splash = document.getElementById('splash-screen');
+      if (splash) {
+        splash.classList.add('splash-out');
+        setTimeout(() => {
+          splash.style.display = 'none';
+        }, 600); // Wait for transition to finish
+      }
+    }, 3000);
+  });
+
   const REL_YEAR = 2026;
   const REL_MONTH = 6; 
   const REL_DAY = 12;
