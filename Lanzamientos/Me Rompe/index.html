@@ -6,275 +6,340 @@
 <title>Me Rompe — MatysitoFlowBakan0 (Pre Lanzamiento)</title>
 <link rel="icon" type="image/png" href="https://t2.genius.com/unsafe/689x689/https%3A%2F%2Fimages.genius.com%2F46c4b6323c90c2a1b215564c4221263f.1000x1000x1.png">
 <style>
-  :root{
-    --bg: #121212;
-    --panel: #0d0d0d;
-    --line: rgba(255,255,255,0.12);
+  :root {
+    --bg-base: #0a0a0a;
+    --bg-glass: rgba(25, 25, 25, 0.6);
+    --panel-border: rgba(255, 255, 255, 0.08);
+    --line: rgba(255, 255, 255, 0.06);
     --text: #ffffff;
-    --text-dim: #a7a7a7;
+    --text-dim: #9ca3af;
     --green: #1ed760;
+    --green-glow: rgba(30, 215, 96, 0.4);
+    --hover-bg: rgba(255, 255, 255, 0.05);
   }
 
   /* SOLUCIÓN AL ERROR VISUAL */
   [hidden] { display: none !important; }
 
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  a:focus-visible, button:focus-visible, select:focus-visible{
-    outline:2px solid var(--green);
-    outline-offset:2px;
-    border-radius:2px;
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  a:focus-visible, button:focus-visible, select:focus-visible {
+    outline: 2px solid var(--green);
+    outline-offset: 4px;
+    border-radius: 4px;
   }
-  .app{animation:fade-in .5s ease both;}
-  @keyframes fade-in{
-    from{opacity:0; transform:translateY(6px);}
-    to{opacity:1; transform:translateY(0);}
-  }
-  body{
-    background:linear-gradient(180deg, #4d4d4d 0%, #2c2c2c 32%, var(--bg) 62%, var(--bg) 100%);
-    color:var(--text);
-    font-family:-apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing:antialiased;
-    min-height:100vh;
-  }
-
-  .app{max-width:1000px;margin:0 auto;}
-
-  /* ---------- HERO ---------- */
-  .hero{
-    padding:56px 40px 32px;
-  }
-  .hero-inner{display:flex; gap:24px; align-items:flex-end; flex-wrap:wrap;}
-
-  .cover{
-    width:212px; height:212px; flex-shrink:0;
-    border-radius:4px;
-    box-shadow:0 22px 55px rgba(0,0,0,0.55);
-    overflow:hidden;
-    background:#232325;
-  }
-  .cover img{
-    width:100%; height:100%; object-fit:cover; display:block;
+  
+  body {
+    background-color: var(--bg-base);
+    background-image: 
+      radial-gradient(circle at 15% 0%, rgba(45, 45, 45, 0.8) 0%, transparent 40%),
+      radial-gradient(circle at 85% 30%, rgba(30, 30, 30, 0.6) 0%, transparent 45%);
+    background-attachment: fixed;
+    color: var(--text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    overflow-x: hidden;
   }
 
-  .meta{flex:1; min-width:280px; padding-bottom:2px;}
-  .eyebrow{
-    font-size:15px; font-weight:400; color:var(--text);
-    margin:0 0 8px;
+  .app {
+    max-width: 1040px;
+    margin: 0 auto;
+    animation: fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
-  .title{
-    font-weight:900;
-    font-size:clamp(34px, 6vw, 72px);
-    line-height:1.05;
-    margin:0 0 18px;
-    letter-spacing:-0.02em;
-  }
-  .artist-row{
-    display:flex; align-items:center; gap:8px; margin-bottom:22px;
-    font-size:15px; color:var(--text-dim); flex-wrap:wrap;
-  }
-  .artist-avatar{
-    width:24px; height:24px; border-radius:50%; flex-shrink:0;
-    background:#535353;
-    display:flex; align-items:center; justify-content:center;
-    overflow:hidden;
-  }
-  .artist-avatar svg{width:14px; height:14px; opacity:0.8;}
-  .artist-link{
-    color:var(--text); font-weight:700; text-decoration:none;
-    border-bottom:1px solid transparent;
-  }
-  .artist-link:hover{
-    text-decoration:underline;
-  }
-  .dot{opacity:.8;}
-
-  /* ---------- COUNTDOWN + COUNTRY ROW ---------- */
-  .release-row{
-    display:flex; gap:14px; flex-wrap:wrap; align-items:stretch;
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
-  .countdown{
-    display:flex;
-    background:var(--panel);
-    border-radius:4px;
-    overflow:hidden;
-    transition:opacity .25s ease;
+  .hero {
+    padding: 72px 40px 40px;
+    position: relative;
   }
-  .countdown .cell{
-    padding:14px 22px;
-    text-align:center;
-    min-width:64px;
-    position:relative;
-  }
-  .countdown .cell + .cell::before{
-    content:"";
-    position:absolute; left:0; top:14px; bottom:14px;
-    width:1px; background:rgba(255,255,255,0.18);
-  }
-  .countdown .num{
-    font-size:28px; font-weight:700; font-variant-numeric:tabular-nums;
-    color:var(--text);
-    line-height:1;
-  }
-  .countdown .label{
-    font-size:12px; color:var(--text-dim); margin-top:6px;
+  /* Decorative subtle line at the top */
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 40px; right: 40px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
   }
 
-  .live-badge{
-    display:flex; align-items:center; gap:10px;
-    background:var(--panel);
-    border-radius:4px;
-    padding:0 22px;
-    color:var(--green);
-    font-weight:700; font-size:14px;
-  }
-  .live-dot{
-    width:8px; height:8px; border-radius:50%; background:var(--green);
-    animation:live-pulse 1.8s infinite;
-  }
-  @keyframes live-pulse{
-    0%   { box-shadow:0 0 0 0 rgba(30,215,96,0.55); }
-    70%  { box-shadow:0 0 0 9px rgba(30,215,96,0); }
-    100% { box-shadow:0 0 0 0 rgba(30,215,96,0); }
+  .hero-inner {
+    display: flex; gap: 32px; align-items: flex-end; flex-wrap: wrap;
   }
 
-  .country-card{
-    background:var(--panel);
-    border-radius:4px;
-    padding:12px 18px;
-    min-width:230px;
-    display:flex; flex-direction:column; justify-content:center; gap:7px;
+  .cover {
+    width: 232px; height: 232px; flex-shrink: 0;
+    border-radius: 12px;
+    box-shadow: 0 30px 60px -12px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.1);
+    overflow: hidden;
+    background: #1a1a1a;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
-  .country-card .q{
-    font-size:12px; color:var(--text-dim);
+  .cover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 40px 70px -15px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.15);
   }
-  .select-wrap{position:relative;}
-  .select-wrap::after{
-    content:"";
-    position:absolute; right:10px; top:50%; transform:translateY(-50%);
-    width:8px; height:8px;
-    border-right:1.5px solid var(--text-dim);
-    border-bottom:1.5px solid var(--text-dim);
-    transform:translateY(-65%) rotate(45deg);
-    pointer-events:none;
+  .cover img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
   }
-  .country-select{
-    width:100%;
-    appearance:none;
-    -webkit-appearance:none;
-    background:#2a2a2a;
-    color:var(--text);
-    border:1px solid var(--line);
-    border-radius:4px;
-    padding:8px 26px 8px 10px;
-    font-size:13px;
-    font-family:inherit;
-    outline:none;
-    cursor:pointer;
-    transition:border-color .15s ease, background .15s ease;
-  }
-  .country-select:hover{border-color:#8a8a8a; background:#323232;}
-  .country-select:focus{border-color:var(--green); box-shadow:0 0 0 1px var(--green);}
-  .country-result{
-    font-size:12.5px; color:var(--text-dim); line-height:1.4;
-  }
-  .country-result b{color:var(--text); font-weight:600;}
 
-  /* ANIMACIÓN AL CAMBIAR DE PAÍS */
+  .meta { flex: 1; min-width: 300px; padding-bottom: 4px; }
+  .eyebrow {
+    font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--text-dim); margin: 0 0 12px;
+  }
+  .title {
+    font-weight: 900;
+    font-size: clamp(40px, 7vw, 84px);
+    line-height: 1;
+    margin: 0 0 16px;
+    letter-spacing: -0.03em;
+    text-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+  .artist-row {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 32px;
+    font-size: 15px; color: var(--text-dim); flex-wrap: wrap;
+  }
+  .artist-avatar {
+    width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+    background: #333;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    box-shadow: 0 0 0 2px var(--bg-base);
+  }
+  .artist-avatar svg { width: 16px; height: 16px; opacity: 0.9; }
+  .artist-link {
+    color: var(--text); font-weight: 700; text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .artist-link:hover { color: var(--green); }
+  .dot { opacity: 0.5; font-size: 12px; }
+
+  .release-row {
+    display: flex; gap: 16px; flex-wrap: wrap; align-items: stretch;
+  }
+
+  .countdown {
+    display: flex;
+    background: var(--bg-glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: opacity 0.3s ease;
+  }
+  .countdown .cell {
+    padding: 16px 24px;
+    text-align: center;
+    min-width: 72px;
+    position: relative;
+  }
+  .countdown .cell + .cell::before {
+    content: "";
+    position: absolute; left: 0; top: 20%; bottom: 20%;
+    width: 1px; background: var(--line);
+  }
+  .countdown .num {
+    font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums;
+    color: var(--text);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .countdown .label {
+    font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--text-dim); margin-top: 8px;
+  }
+
+  .live-badge {
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(30, 215, 96, 0.1);
+    border: 1px solid rgba(30, 215, 96, 0.2);
+    border-radius: 12px;
+    padding: 0 28px;
+    color: var(--green);
+    font-weight: 700; font-size: 15px;
+    box-shadow: 0 8px 24px -8px var(--green-glow);
+  }
+  .live-dot {
+    width: 10px; height: 10px; border-radius: 50%; background: var(--green);
+    animation: live-pulse 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  @keyframes live-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(30,215,96,0.6); }
+    70%  { box-shadow: 0 0 0 12px rgba(30,215,96,0); }
+    100% { box-shadow: 0 0 0 0 rgba(30,215,96,0); }
+  }
+
+  .country-card {
+    background: var(--bg-glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    min-width: 240px;
+    display: flex; flex-direction: column; justify-content: center; gap: 10px;
+  }
+  .country-card .q {
+    font-size: 13px; font-weight: 500; color: var(--text-dim);
+  }
+  .select-wrap { position: relative; }
+  .select-wrap::after {
+    content: "";
+    position: absolute; right: 12px; top: 50%;
+    width: 8px; height: 8px;
+    border-right: 2px solid var(--text-dim);
+    border-bottom: 2px solid var(--text-dim);
+    transform: translateY(-65%) rotate(45deg);
+    pointer-events: none;
+    transition: border-color 0.2s ease;
+  }
+  .select-wrap:hover::after { border-color: var(--text); }
+  .country-select {
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    background: rgba(0,0,0,0.3);
+    color: var(--text);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 10px 32px 10px 12px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: inherit;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .country-select:hover { border-color: rgba(255,255,255,0.2); background: rgba(0,0,0,0.5); }
+  .country-select:focus { border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+  .country-select option { background: #1a1a1a; color: #fff; }
+  
+  .country-result {
+    font-size: 13px; color: var(--text-dim); line-height: 1.5;
+  }
+  .country-result b { color: var(--text); font-weight: 600; }
+
   .anim-update {
-    animation: pop-update 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+    animation: pop-update 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
   }
   @keyframes pop-update {
-    0% { transform: scale(0.92); opacity: 0; filter: blur(2px); }
+    0% { transform: scale(0.96); opacity: 0; filter: blur(4px); }
     100% { transform: scale(1); opacity: 1; filter: blur(0); }
   }
 
-  /* ---------- ACTIONS ---------- */
-  .actions{
-    padding:26px 40px; display:flex; align-items:center; gap:24px;
+  .actions {
+    padding: 16px 40px; display: flex; align-items: center; gap: 24px;
+    position: relative; z-index: 10;
   }
-  .play-btn{
-    display:flex; align-items:center; justify-content:center;
-    width:56px; height:56px; border-radius:50%;
-    background:var(--green); color:#000000;
-    text-decoration:none;
-    cursor:pointer;
-    animation: play-pulse 2.2s ease-out infinite;
-    transition:transform .15s ease, background .15s ease;
+  .play-btn {
+    display: flex; align-items: center; justify-content: center;
+    width: 64px; height: 64px; border-radius: 50%;
+    background: var(--green);
+    color: #000000;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 8px 24px -8px var(--green-glow);
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease, box-shadow 0.2s ease;
   }
-  .play-btn:hover{transform:scale(1.06); background:#22e065; animation-play-state:paused;}
-  .play-btn svg{margin-left:3px;}
-  @keyframes play-pulse{
-    0%   { box-shadow:0 0 0 0 rgba(30,215,96,0.55); }
-    70%  { box-shadow:0 0 0 16px rgba(30,215,96,0); }
-    100% { box-shadow:0 0 0 0 rgba(30,215,96,0); }
+  .play-btn:hover {
+    transform: scale(1.08); 
+    background: #1fdf64; 
+    box-shadow: 0 12px 32px -8px var(--green-glow);
   }
-  .dots{
-    width:36px; height:36px; border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
-    color:var(--text-dim); cursor:default;
+  .play-btn:active { transform: scale(0.98); }
+  .play-btn svg { margin-left: 4px; width: 28px; height: 28px; }
+  
+  .dots {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-dim); cursor: pointer;
+    transition: color 0.2s ease, background 0.2s ease;
   }
+  .dots:hover { color: var(--text); background: var(--hover-bg); }
 
-  /* ---------- TRACKLIST ---------- */
-  .tracklist{padding:8px 40px 60px;}
-  .tracklist h2{font-size:22px; font-weight:700; margin:0 0 18px;}
-  .tl-head{
-    display:grid; grid-template-columns:36px 1fr 60px;
-    gap:12px; padding:0 12px 8px; border-bottom:1px solid var(--line);
-    color:var(--text-dim); font-size:13px;
-  }
-  .tl-row{
-    display:grid; grid-template-columns:36px 1fr 60px;
-    gap:12px; align-items:center; padding:12px;
-    border-radius:4px;
-    transition: background-color 0.3s ease;
-  }
-  .tl-row:hover{background:rgba(255,255,255,0.07);}
-  .tl-idx{
-    color:var(--text-dim); font-variant-numeric:tabular-nums;
-    position:relative; width:16px; height:16px;
-  }
-  .tl-idx .idx-num{display:block;}
-  .tl-idx .idx-play{
-    display:none; align-items:center; justify-content:center;
-    position:absolute; inset:0; color:var(--text);
+  .tracklist { padding: 16px 40px 80px; }
+  .tracklist h2 { font-size: 20px; font-weight: 700; margin: 0 0 24px; letter-spacing: -0.01em; }
+  
+  .tl-head {
+    display: grid; grid-template-columns: 48px 1fr 60px;
+    gap: 16px; padding: 0 16px 12px; border-bottom: 1px solid var(--line);
+    color: var(--text-dim); font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;
+    margin-bottom: 8px;
   }
   
-  /* Lógica normal de hover (solo cuando NO está bloqueada) */
-  .tl-row:not(.locked):hover .idx-num{display:none;}
-  .tl-row:not(.locked):hover .idx-play{display:flex;}
+  .tl-row {
+    display: grid; grid-template-columns: 48px 1fr 60px;
+    gap: 16px; align-items: center; padding: 12px 16px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+    margin-bottom: 4px;
+  }
+  .tl-row:hover { background: var(--hover-bg); }
   
-  .tl-song .name{font-weight:400; font-size:16px; margin:0; transition: color 0.3s;}
-  .tl-song .name a{color:var(--text); text-decoration:none;}
-  .tl-song .name a:hover{text-decoration:underline;}
-  .tl-song .by{font-size:14px; margin-top:2px; transition: color 0.3s;}
-  .tl-song .by a{color:var(--text-dim); text-decoration:none;}
-  .tl-song .by a:hover{color:var(--text); text-decoration:underline;}
-  .tl-time{color:var(--text-dim); font-size:14px; text-align:right; font-variant-numeric:tabular-nums; transition: opacity 0.3s;}
+  .tl-idx {
+    color: var(--text-dim); font-variant-numeric: tabular-nums;
+    font-size: 15px; font-weight: 500;
+    position: relative; width: 20px; height: 20px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .tl-idx .idx-num { display: block; }
+  .tl-idx .idx-play {
+    display: none; align-items: center; justify-content: center;
+    position: absolute; inset: 0; color: var(--text);
+  }
+  
+  .tl-row:not(.locked):hover .idx-num { display: none; }
+  .tl-row:not(.locked):hover .idx-play { display: flex; }
+  
+  .tl-song .name { font-weight: 500; font-size: 16px; margin: 0; transition: color 0.2s; letter-spacing: -0.01em; }
+  .tl-song .name a { color: var(--text); text-decoration: none; }
+  .tl-song .name a:hover { text-decoration: underline; }
+  .tl-song .by { font-size: 14px; margin-top: 4px; transition: color 0.2s; }
+  .tl-song .by a { color: var(--text-dim); text-decoration: none; }
+  .tl-song .by a:hover { color: var(--text); text-decoration: underline; }
+  .tl-time { color: var(--text-dim); font-size: 14px; font-weight: 500; text-align: right; font-variant-numeric: tabular-nums; transition: opacity 0.3s; }
 
-  /* ESTADO BLOQUEADO */
-  .tl-row.locked .name{color:var(--text-dim);}
-  .tl-row.locked .by{color:var(--text-dim); opacity:.75;}
-  .tl-row.locked .tl-time{opacity:.7;}
-  .tl-row.locked .idx-num{opacity:.75;}
-  .tl-row.locked .idx-play{display:none !important;}
+  /* Locked State Styles */
+  .tl-row.locked { opacity: 0.6; pointer-events: none; }
+  .tl-row.locked .name { color: var(--text-dim); }
+  .tl-row.locked .by { color: rgba(156, 163, 175, 0.7); }
+  .tl-row.locked .tl-time { opacity: 0.5; }
+  .tl-row.locked .idx-num { opacity: 0.7; }
+  .tl-row.locked .idx-play { display: none !important; }
 
-  /* ANIMACIÓN DE DESBLOQUEO (Flash blanco) */
+  /* Unlock Animation */
   .unlock-flash {
-    animation: flash-white 1.5s ease-out forwards;
+    animation: flash-glass 1.2s cubic-bezier(0.2, 0, 0, 1) forwards;
   }
-  @keyframes flash-white {
-    0%   { background-color: rgba(255, 255, 255, 0); }
-    20%  { background-color: rgba(255, 255, 255, 0.3); }
-    100% { background-color: rgba(255, 255, 255, 0); }
+  @keyframes flash-glass {
+    0%   { background-color: transparent; box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+    15%  { background-color: rgba(255, 255, 255, 0.15); box-shadow: 0 0 20px rgba(255,255,255,0.1); }
+    100% { background-color: transparent; box-shadow: 0 0 0 0 rgba(255,255,255,0); }
   }
 
-  @media (max-width:560px){
-    .hero{padding:36px 20px 24px;}
-    .actions,.tracklist{padding-left:20px; padding-right:20px;}
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .hero { padding: 48px 24px 24px; }
+    .hero-inner { flex-direction: column; align-items: center; text-align: center; gap: 24px; }
+    .cover { width: 200px; height: 200px; }
+    .meta { display: flex; flex-direction: column; align-items: center; }
+    .artist-row { justify-content: center; }
+    .release-row { justify-content: center; }
+    .actions { padding: 16px 24px; justify-content: center; }
+    .tracklist { padding: 8px 24px 60px; }
+  }
+  @media (max-width: 480px) {
+    .countdown .cell { padding: 12px 16px; min-width: 60px; }
+    .countdown .num { font-size: 24px; }
+    .title { font-size: 32px; }
   }
 </style>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
 <div class="app">
@@ -282,7 +347,7 @@
   <div class="hero">
     <div class="hero-inner">
       <div class="cover">
-        <img src="https://t2.genius.com/unsafe/689x689/https%3A%2F%2Fimages.genius.com%2F46c4b6323c90c2a1b215564c4221263f.1000x1000x1.png" alt="Me Rompe" />
+        <img src="https://t2.genius.com/unsafe/689x689/https%3A%2F%2Fimages.genius.com%2F46c4b6323c90c2a1b215564c4221263f.1000x1000x1.png" alt="Me Rompe Cover Art" />
       </div>
 
       <div class="meta">
@@ -290,11 +355,11 @@
         <h1 class="title">Me Rompe</h1>
         <div class="artist-row">
           <span class="artist-avatar">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#c7c7c7" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6" stroke-linecap="round"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#e5e5e5" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6" stroke-linecap="round"/></svg>
           </span>
           <a class="artist-link" href="https://www.youtube.com/@MatysitoFlowBakan0c/" target="_blank" rel="noopener noreferrer">MatysitoFlowBakan0</a>
           <span class="dot">•</span>
-          <span id="date-line">Se publica el 12 de julio de 2026 (Hora Local)</span>
+          <span id="date-line">Se publica el 12 de julio de 2026</span>
         </div>
 
         <div class="release-row">
@@ -321,28 +386,29 @@
   </div>
 
   <div class="actions">
-    <a class="play-btn" href="https://youtu.be/o_WIsCZHc9w" target="_blank" rel="noopener noreferrer" aria-label="Reproducir Me Rompe">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+    <a class="play-btn" href="https://youtu.be/o_WIsCZHc9w" target="_blank" rel="noopener noreferrer" aria-label="Reproducir Me Rompe Principal">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v13.72a1 1 0 001.5.86l11-6.86a1 1 0 000-1.72l-11-6.86a1 1 0 00-1.5.86z"/></svg>
     </a>
-    <span class="dots">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+    <span class="dots" aria-label="Más opciones">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2.5"/><circle cx="12" cy="12" r="2.5"/><circle cx="19" cy="12" r="2.5"/></svg>
     </span>
   </div>
 
   <div class="tracklist">
-    <h2>Vista previa de la lista de canciones</h2>
+    <h2>Lista de canciones</h2>
     <div class="tl-head">
       <div>#</div>
       <div>Título</div>
       <div style="text-align:right;">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
       </div>
     </div>
+    
     <div class="tl-row">
       <div class="tl-idx">
         <span class="idx-num">1</span>
-        <a class="idx-play" href="https://youtu.be/o_WIsCZHc9w" target="_blank" rel="noopener noreferrer" aria-label="Reproducir Me Rompe Explicit">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        <a class="idx-play" href="https://youtu.be/o_WIsCZHc9w" target="_blank" rel="noopener noreferrer" aria-label="Reproducir">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
         </a>
       </div>
       <div class="tl-song">
@@ -351,11 +417,12 @@
       </div>
       <div class="tl-time">3:16</div>
     </div>
+    
     <div class="tl-row">
       <div class="tl-idx">
         <span class="idx-num">2</span>
-        <a class="idx-play" href="https://youtu.be/1CzTOXuogr0" target="_blank" rel="noopener noreferrer" aria-label="Reproducir Me Rompe Clean">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        <a class="idx-play" href="https://youtu.be/1CzTOXuogr0" target="_blank" rel="noopener noreferrer" aria-label="Reproducir">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
         </a>
       </div>
       <div class="tl-song">
@@ -369,25 +436,22 @@
     <div class="tl-row locked" id="track3-row">
       <div class="tl-idx" id="track3-idx">
         <span class="idx-num">3</span>
-        <!-- El botón de play se insertará aquí dinámicamente -->
       </div>
       <div class="tl-song" id="track3-song">
         <div class="name" id="track3-name">Me Rompe (8D)</div>
         <div class="by" id="track3-by">MatysitoFlowBakan0</div>
       </div>
-      <div class="tl-time" id="track3-time">-:--</div>
+      <div class="tl-time" id="track3-time">-:- -</div>
     </div>
   </div>
 
 </div>
 
 <script>
-  // ---- Fecha de lanzamiento: 12 de julio de 2026 ----
   const REL_YEAR = 2026;
-  const REL_MONTH = 6; // Julio (0 es enero, 6 es julio)
+  const REL_MONTH = 6; 
   const REL_DAY = 12;
 
-  // ---- Lista de países: [nombre en español, código ISO, zona horaria IANA] ----
   const COUNTRIES = [["Afganistán","AF","Asia/Kabul"],["Albania","AL","Europe/Tirane"],["Alemania","DE","Europe/Berlin"],["Andorra","AD","Europe/Andorra"],["Angola","AO","Africa/Luanda"],["Anguila","AI","America/Anguilla"],["Antigua y Barbuda","AG","America/Antigua"],["Antártida","AQ","Antarctica/McMurdo"],["Arabia Saudí","SA","Asia/Riyadh"],["Argelia","DZ","Africa/Algiers"],["Argentina","AR","America/Argentina/Buenos_Aires"],["Armenia","AM","Asia/Yerevan"],["Aruba","AW","America/Aruba"],["Australia","AU","Australia/Sydney"],["Austria","AT","Europe/Vienna"],["Azerbaiyán","AZ","Asia/Baku"],["Bahamas","BS","America/Nassau"],["Bangladés","BD","Asia/Dhaka"],["Barbados","BB","America/Barbados"],["Baréin","BH","Asia/Bahrain"],["Belice","BZ","America/Belize"],["Benín","BJ","Africa/Porto-Novo"],["Bermudas","BM","Atlantic/Bermuda"],["Bielorrusia","BY","Europe/Minsk"],["Bolivia","BO","America/La_Paz"],["Bosnia y Herzegovina","BA","Europe/Sarajevo"],["Botsuana","BW","Africa/Gaborone"],["Brasil","BR","America/Sao_Paulo"],["Brunéi","BN","Asia/Brunei"],["Bulgaria","BG","Europe/Sofia"],["Burkina Faso","BF","Africa/Ouagadougou"],["Burundi","BI","Africa/Bujumbura"],["Bután","BT","Asia/Thimphu"],["Bélgica","BE","Europe/Brussels"],["Cabo Verde","CV","Atlantic/Cape_Verde"],["Camboya","KH","Asia/Phnom_Penh"],["Camerún","CM","Africa/Douala"],["Canadá","CA","America/Toronto"],["Caribe neerlandés","BQ","America/Kralendijk"],["Catar","QA","Asia/Qatar"],["Chad","TD","Africa/Ndjamena"],["Chequia","CZ","Europe/Prague"],["Chile","CL","America/Santiago"],["China","CN","Asia/Shanghai"],["Chipre","CY","Asia/Nicosia"],["Ciudad del Vaticano","VA","Europe/Vatican"],["Colombia","CO","America/Bogota"],["Comoras","KM","Indian/Comoro"],["Congo","CG","Africa/Brazzaville"],["Corea del Norte","KP","Asia/Pyongyang"],["Corea del Sur","KR","Asia/Seoul"],["Costa Rica","CR","America/Costa_Rica"],["Croacia","HR","Europe/Zagreb"],["Cuba","CU","America/Havana"],["Curazao","CW","America/Curacao"],["Côte d’Ivoire","CI","Africa/Abidjan"],["Dinamarca","DK","Europe/Copenhagen"],["Dominica","DM","America/Dominica"],["Ecuador","EC","America/Guayaquil"],["Egipto","EG","Africa/Cairo"],["El Salvador","SV","America/El_Salvador"],["Emiratos Árabes Unidos","AE","Asia/Dubai"],["Eritrea","ER","Africa/Asmara"],["Eslovaquia","SK","Europe/Bratislava"],["Eslovenia","SI","Europe/Ljubljana"],["España","ES","Europe/Madrid"],["Estados Unidos","US","America/New_York"],["Estonia","EE","Europe/Tallinn"],["Esuatini","SZ","Africa/Mbabane"],["Etiopía","ET","Africa/Addis_Ababa"],["Filipinas","PH","Asia/Manila"],["Finlandia","FI","Europe/Helsinki"],["Fiyi","FJ","Pacific/Fiji"],["Francia","FR","Europe/Paris"],["Gabón","GA","Africa/Libreville"],["Gambia","GM","Africa/Banjul"],["Georgia","GE","Asia/Tbilisi"],["Ghana","GH","Africa/Accra"],["Gibraltar","GI","Europe/Gibraltar"],["Granada","GD","America/Grenada"],["Grecia","GR","Europe/Athens"],["Groenlandia","GL","America/Nuuk"],["Guadalupe","GP","America/Guadeloupe"],["Guam","GU","Pacific/Guam"],["Guatemala","GT","America/Guatemala"],["Guayana Francesa","GF","America/Cayenne"],["Guernesey","GG","Europe/Guernsey"],["Guinea","GN","Africa/Conakry"],["Guinea Ecuatorial","GQ","Africa/Malabo"],["Guinea-Bisáu","GW","Africa/Bissau"],["Guyana","GY","America/Guyana"],["Haití","HT","America/Port-au-Prince"],["Honduras","HN","America/Tegucigalpa"],["Hungría","HU","Europe/Budapest"],["India","IN","Asia/Kolkata"],["Indonesia","ID","Asia/Jakarta"],["Irak","IQ","Asia/Baghdad"],["Irlanda","IE","Europe/Dublin"],["Irán","IR","Asia/Tehran"],["Isla Norfolk","NF","Pacific/Norfolk"],["Isla de Man","IM","Europe/Isle_of_Man"],["Isla de Navidad","CX","Indian/Christmas"],["Islandia","IS","Atlantic/Reykjavik"],["Islas Aland","AX","Europe/Mariehamn"],["Islas Caimán","KY","America/Cayman"],["Islas Cocos","CC","Indian/Cocos"],["Islas Cook","CK","Pacific/Rarotonga"],["Islas Feroe","FO","Atlantic/Faroe"],["Islas Georgia del Sur y Sandwich del Sur","GS","Atlantic/South_Georgia"],["Islas Malvinas","FK","Atlantic/Stanley"],["Islas Marianas del Norte","MP","Pacific/Saipan"],["Islas Marshall","MH","Pacific/Majuro"],["Islas Pitcairn","PN","Pacific/Pitcairn"],["Islas Salomón","SB","Pacific/Guadalcanal"],["Islas Turcas y Caicos","TC","America/Grand_Turk"],["Islas Vírgenes Británicas","VG","America/Tortola"],["Islas Vírgenes de EE. UU.","VI","America/St_Thomas"],["Islas menores alejadas de EE. UU.","UM","Pacific/Midway"],["Israel","IL","Asia/Jerusalem"],["Italia","IT","Europe/Rome"],["Jamaica","JM","America/Jamaica"],["Japón","JP","Asia/Tokyo"],["Jersey","JE","Europe/Jersey"],["Jordania","JO","Asia/Amman"],["Kazajistán","KZ","Asia/Almaty"],["Kenia","KE","Africa/Nairobi"],["Kirguistán","KG","Asia/Bishkek"],["Kiribati","KI","Pacific/Tarawa"],["Kosovo","XK","Europe/Belgrade"],["Kuwait","KW","Asia/Kuwait"],["Laos","LA","Asia/Vientiane"],["Lesoto","LS","Africa/Maseru"],["Letonia","LV","Europe/Riga"],["Liberia","LR","Africa/Monrovia"],["Libia","LY","Africa/Tripoli"],["Liechtenstein","LI","Europe/Vaduz"],["Lituania","LT","Europe/Vilnius"],["Luxemburgo","LU","Europe/Luxembourg"],["Líbano","LB","Asia/Beirut"],["Macedonia del Norte","MK","Europe/Skopje"],["Madagascar","MG","Indian/Antananarivo"],["Malasia","MY","Asia/Kuala_Lumpur"],["Malaui","MW","Africa/Blantyre"],["Maldivas","MV","Indian/Maldives"],["Mali","ML","Africa/Bamako"],["Malta","MT","Europe/Malta"],["Marruecos","MA","Africa/Casablanca"],["Martinica","MQ","America/Martinique"],["Mauricio","MU","Indian/Mauritius"],["Mauritania","MR","Africa/Nouakchott"],["Mayotte","YT","Indian/Mayotte"],["Micronesia","FM","Pacific/Pohnpei"],["Moldavia","MD","Europe/Chisinau"],["Mongolia","MN","Asia/Ulaanbaatar"],["Montenegro","ME","Europe/Podgorica"],["Montserrat","MS","America/Montserrat"],["Mozambique","MZ","Africa/Maputo"],["Myanmar (Birmania)","MM","Asia/Yangon"],["México","MX","America/Mexico_City"],["Mónaco","MC","Europe/Monaco"],["Namibia","NA","Africa/Windhoek"],["Nauru","NR","Pacific/Nauru"],["Nepal","NP","Asia/Kathmandu"],["Nicaragua","NI","America/Managua"],["Nigeria","NG","Africa/Lagos"],["Niue","NU","Pacific/Niue"],["Noruega","NO","Europe/Oslo"],["Nueva Caledonia","NC","Pacific/Noumea"],["Nueva Zelanda","NZ","Pacific/Auckland"],["Níger","NE","Africa/Niamey"],["Omán","OM","Asia/Muscat"],["Pakistán","PK","Asia/Karachi"],["Palaos","PW","Pacific/Palau"],["Panamá","PA","America/Panama"],["Papúa Nueva Guinea","PG","Pacific/Port_Moresby"],["Paraguay","PY","America/Asuncion"],["Países Bajos","NL","Europe/Amsterdam"],["Perú","PE","America/Lima"],["Polinesia Francesa","PF","Pacific/Tahiti"],["Polonia","PL","Europe/Warsaw"],["Portugal","PT","Europe/Lisbon"],["Puerto Rico","PR","America/Puerto_Rico"],["RAE de Hong Kong (China)","HK","Asia/Hong_Kong"],["RAE de Macao (China)","MO","Asia/Macau"],["Reino Unido","GB","Europe/London"],["República Centroafricana","CF","Africa/Bangui"],["República Democrática del Congo","CD","Africa/Kinshasa"],["República Dominicana","DO","America/Santo_Domingo"],["Reunión","RE","Indian/Reunion"],["Ruanda","RW","Africa/Kigali"],["Rumanía","RO","Europe/Bucharest"],["Rusia","RU","Europe/Moscow"],["Samoa","WS","Pacific/Apia"],["Samoa Americana","AS","Pacific/Pago_Pago"],["San Bartolomé","BL","America/St_Barthelemy"],["San Cristóbal y Nieves","KN","America/St_Kitts"],["San Marino","SM","Europe/San_Marino"],["San Martín","MF","America/Marigot"],["San Pedro y Miquelón","PM","America/Miquelon"],["San Vicente y las Granadinas","VC","America/St_Vincent"],["Santa Elena","SH","Atlantic/St_Helena"],["Santa Lucía","LC","America/St_Lucia"],["Santo Tomé y Príncipe","ST","Africa/Sao_Tome"],["Senegal","SN","Africa/Dakar"],["Serbia","RS","Europe/Belgrade"],["Seychelles","SC","Indian/Mahe"],["Sierra Leona","SL","Africa/Freetown"],["Singapur","SG","Asia/Singapore"],["Sint Maarten","SX","America/Lower_Princes"],["Siria","SY","Asia/Damascus"],["Somalia","SO","Africa/Mogadishu"],["Sri Lanka","LK","Asia/Colombo"],["Sudáfrica","ZA","Africa/Johannesburg"],["Sudán","SD","Africa/Khartoum"],["Sudán del Sur","SS","Africa/Juba"],["Suecia","SE","Europe/Stockholm"],["Suiza","CH","Europe/Zurich"],["Surinam","SR","America/Paramaribo"],["Svalbard y Jan Mayen","SJ","Arctic/Longyearbyen"],["Sáhara Occidental","EH","Africa/El_Aaiun"],["Tailandia","TH","Asia/Bangkok"],["Taiwán","TW","Asia/Taipei"],["Tanzania","TZ","Africa/Dar_es_Salaam"],["Tayikistán","TJ","Asia/Dushanbe"],["Territorio Británico del Océano Índico","IO","Indian/Chagos"],["Territorios Australes Franceses","TF","Indian/Kerguelen"],["Territorios Palestinos","PS","Asia/Gaza"],["Timor-Leste","TL","Asia/Dili"],["Togo","TG","Africa/Lome"],["Tokelau","TK","Pacific/Fakaofo"],["Tonga","TO","Pacific/Tongatapu"],["Trinidad y Tobago","TT","America/Port_of_Spain"],["Turkmenistán","TM","Asia/Ashgabat"],["Turquía","TR","Europe/Istanbul"],["Tuvalu","TV","Pacific/Funafuti"],["Túnez","TN","Africa/Tunis"],["Ucrania","UA","Europe/Kyiv"],["Uganda","UG","Africa/Kampala"],["Uruguay","UY","America/Montevideo"],["Uzbekistán","UZ","Asia/Samarkand"],["Vanuatu","VU","Pacific/Efate"],["Venezuela","VE","America/Caracas"],["Vietnam","VN","Asia/Ho_Chi_Minh"],["Wallis y Futuna","WF","Pacific/Wallis"],["Yemen","YE","Asia/Aden"],["Yibuti","DJ","Africa/Djibouti"],["Zambia","ZM","Africa/Lusaka"],["Zimbabue","ZW","Africa/Harare"]];
 
   const select = document.getElementById('country-select');
@@ -403,22 +467,18 @@
   function pad(n){ return String(n).padStart(2,'0'); }
 
   let selectedTz = select.value; 
+  let wasFullyLaunched = false;
 
   const resultEl = document.getElementById('country-result');
   const dateLineEl = document.getElementById('date-line');
   const countdownEl = document.getElementById('countdown');
   const liveBadgeEl = document.getElementById('live-badge');
   const track3RowEl = document.getElementById('track3-row');
-
-  // Elementos de la canción 3 para actualizarlos dinámicamente
   const t3Idx = document.getElementById('track3-idx');
   const t3Name = document.getElementById('track3-name');
   const t3By = document.getElementById('track3-by');
   const t3Time = document.getElementById('track3-time');
 
-  let wasFullyLaunched = false; // Variable para saber si ya animamos la pista 3
-
-  // Calcula cuánto falta para una hora específica en la zona horaria elegida
   function getDiffForCountry(tz, targetHour){
     const now = new Date();
     const dtf = new Intl.DateTimeFormat('en-US', {
@@ -427,81 +487,62 @@
       hour: '2-digit', minute: '2-digit', second: '2-digit'
     });
     const parts = dtf.formatToParts(now).reduce((acc,p)=>{acc[p.type]=p.value; return acc;},{});
-    
     const currentInTz = new Date(parts.year, parts.month-1, parts.day, parts.hour, parts.minute, parts.second).getTime();
     const targetLocal = new Date(REL_YEAR, REL_MONTH, REL_DAY, targetHour, 0, 0).getTime();
-    
     return targetLocal - currentInTz; 
   }
 
   function updateCountryLabel(activeDiff, targetIsAlbum){
     const opt = select.options[select.selectedIndex];
     const name = opt.dataset.name;
-    
     const verb = activeDiff <= 0 ? 'ya salió' : 'se estrena';
     const type = targetIsAlbum ? 'el álbum' : 'el sencillo';
     const timeStr = targetIsAlbum ? '10:00 p. m.' : '9:00 p. m.';
-    
     resultEl.innerHTML = 'En <b>' + name + '</b> ' + type + ' ' + verb + ' a las ' + timeStr + ' (hora local).';
   }
 
-  // Función para desbloquear visualmente la pista 3 y poner el enlace
   function unlockTrack3(triggerAnimation) {
-    if (!track3RowEl.classList.contains('locked')) return; // Ya está desbloqueada
+    if (!track3RowEl.classList.contains('locked')) return; 
     
     track3RowEl.classList.remove('locked');
     
-    // Si acaba de cambiar a las 10:00 en este instante, o cambiaste a un país donde ya salió, animamos.
     if (triggerAnimation) {
       track3RowEl.classList.remove('unlock-flash');
-      void track3RowEl.offsetWidth; // Forzar reflow para reiniciar animación
+      void track3RowEl.offsetWidth; 
       track3RowEl.classList.add('unlock-flash');
     }
 
-    // Insertar el botón de play
     t3Idx.innerHTML = `
       <span class="idx-num">3</span>
       <a class="idx-play" href="https://youtu.be/udAdzocRmxY" target="_blank" rel="noopener noreferrer" aria-label="Reproducir Me Rompe 8D">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
       </a>
     `;
-
-    // Actualizar nombre con enlace
     t3Name.innerHTML = `<a href="https://youtu.be/udAdzocRmxY" target="_blank" rel="noopener noreferrer">Me Rompe (8D)</a>`;
-    
-    // Actualizar artista con enlace
     t3By.innerHTML = `<a href="https://www.youtube.com/@MatysitoFlowBakan0c/" target="_blank" rel="noopener noreferrer">MatysitoFlowBakan0</a>`;
-    
-    // Actualizar tiempo
     t3Time.textContent = '3:16';
   }
 
-  // Función para bloquear la pista 3 (si cambias de un país donde ya salió a uno donde no)
   function lockTrack3() {
-    if (track3RowEl.classList.contains('locked')) return; // Ya está bloqueada
+    if (track3RowEl.classList.contains('locked')) return; 
     
     track3RowEl.classList.add('locked');
     track3RowEl.classList.remove('unlock-flash');
 
-    // Restaurar a estado bloqueado
     t3Idx.innerHTML = `<span class="idx-num">3</span>`;
     t3Name.textContent = 'Me Rompe (8D)';
     t3By.textContent = 'MatysitoFlowBakan0';
-    t3Time.textContent = '-:--';
+    t3Time.textContent = '-:- -';
   }
 
   function tick(){
-    // 9:00 PM (Sencillo)
     const singleDiff = getDiffForCountry(selectedTz, 21);
     const singleLaunched = singleDiff <= 0;
 
-    // 10:00 PM (Álbum)
     const fullRawDiff = getDiffForCountry(selectedTz, 22);
     const fullyLaunched = fullRawDiff <= 0;
     
-    // Lógica visual de la Pista 3
     if (fullyLaunched) {
-       // Se lanza la función de desbloqueo, `wasFullyLaunched` evita que parpadee cada segundo
        unlockTrack3(!wasFullyLaunched);
        wasFullyLaunched = true; 
     } else {
@@ -509,7 +550,6 @@
        wasFullyLaunched = false;
     }
 
-    // Control del contador
     const isWaitingForAlbum = singleLaunched && !fullyLaunched;
     const diff = fullyLaunched ? 0 : (isWaitingForAlbum ? fullRawDiff : singleDiff);
 
@@ -517,6 +557,7 @@
     const hours = Math.floor((diff % 86400000) / 3600000);
     const mins = Math.floor((diff % 3600000) / 60000);
     const secs = Math.floor((diff % 60000) / 1000);
+    
     document.getElementById('cd-days').textContent = pad(days);
     document.getElementById('cd-hours').textContent = pad(hours);
     document.getElementById('cd-mins').textContent = pad(mins);
@@ -542,9 +583,6 @@
 
   select.addEventListener('change', () => {
     selectedTz = select.value;
-    
-    // Forzamos que se recalcule de cero para que la animación de desbloqueo salte 
-    // si el nuevo país ya está en hora de lanzamiento.
     wasFullyLaunched = false; 
 
     countdownEl.classList.remove('anim-update');
