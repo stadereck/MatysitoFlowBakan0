@@ -237,6 +237,11 @@
   .tl-song .by a:hover{color:var(--text); text-decoration:underline;}
   .tl-time{color:var(--text-dim); font-size:14px; text-align:right; font-variant-numeric:tabular-nums;}
 
+  .tl-row.locked .name{color:var(--text-dim);}
+  .tl-row.locked .by{color:var(--text-dim); opacity:.75;}
+  .tl-row.locked .tl-time{opacity:.7;}
+  .tl-row.locked .idx-num{opacity:.75;}
+
   @media (max-width:560px){
     .hero{padding:36px 20px 24px;}
     .actions,.tracklist{padding-left:20px; padding-right:20px;}
@@ -316,7 +321,7 @@
         <div class="name"><a href="https://youtu.be/o_WIsCZHc9w" target="_blank" rel="noopener noreferrer">Me Rompe [Explicit]</a></div>
         <div class="by"><a href="https://www.youtube.com/@MatysitoFlowBakan0c/" target="_blank" rel="noopener noreferrer">MatysitoFlowBakan0</a></div>
       </div>
-      <div class="tl-time">2:58</div>
+      <div class="tl-time">3:16</div>
     </div>
     <div class="tl-row">
       <div class="tl-idx">
@@ -329,7 +334,15 @@
         <div class="name"><a href="https://youtu.be/1CzTOXuogr0" target="_blank" rel="noopener noreferrer">Me Rompe (Clean)</a></div>
         <div class="by"><a href="https://www.youtube.com/@MatysitoFlowBakan0c/" target="_blank" rel="noopener noreferrer">MatysitoFlowBakan0</a></div>
       </div>
-      <div class="tl-time">2:58</div>
+      <div class="tl-time">3:16</div>
+    </div>
+    <div class="tl-row locked" id="track3-row">
+      <div class="tl-idx"><span class="idx-num">3</span></div>
+      <div class="tl-song">
+        <div class="name">Me Rompe (8D)</div>
+        <div class="by">MatysitoFlowBakan0</div>
+      </div>
+      <div class="tl-time">-:--</div>
     </div>
   </div>
 
@@ -339,6 +352,9 @@
   // ---- Fecha/hora de lanzamiento: 12 de julio de 2026, 9:00 PM hora de Ciudad de México (UTC-6) ----
   // Este es el instante absoluto real del lanzamiento (no cambia).
   const RELEASE_UTC = Date.UTC(2026, 6, 13, 3, 0, 0); // = 12 jul 2026 21:00 America/Mexico_City
+
+  // ---- El álbum completo (con la 3ra canción) sube una hora después: 10:00 PM hora de México ----
+  const FULL_RELEASE_UTC = Date.UTC(2026, 6, 13, 4, 0, 0); // = 12 jul 2026 22:00 America/Mexico_City
 
   // ---- Lista de países: [nombre en español, código ISO, zona horaria IANA] ----
   const COUNTRIES = [["Afganistán","AF","Asia/Kabul"],["Albania","AL","Europe/Tirane"],["Alemania","DE","Europe/Berlin"],["Andorra","AD","Europe/Andorra"],["Angola","AO","Africa/Luanda"],["Anguila","AI","America/Anguilla"],["Antigua y Barbuda","AG","America/Antigua"],["Antártida","AQ","Antarctica/McMurdo"],["Arabia Saudí","SA","Asia/Riyadh"],["Argelia","DZ","Africa/Algiers"],["Argentina","AR","America/Argentina/Buenos_Aires"],["Armenia","AM","Asia/Yerevan"],["Aruba","AW","America/Aruba"],["Australia","AU","Australia/Sydney"],["Austria","AT","Europe/Vienna"],["Azerbaiyán","AZ","Asia/Baku"],["Bahamas","BS","America/Nassau"],["Bangladés","BD","Asia/Dhaka"],["Barbados","BB","America/Barbados"],["Baréin","BH","Asia/Bahrain"],["Belice","BZ","America/Belize"],["Benín","BJ","Africa/Porto-Novo"],["Bermudas","BM","Atlantic/Bermuda"],["Bielorrusia","BY","Europe/Minsk"],["Bolivia","BO","America/La_Paz"],["Bosnia y Herzegovina","BA","Europe/Sarajevo"],["Botsuana","BW","Africa/Gaborone"],["Brasil","BR","America/Sao_Paulo"],["Brunéi","BN","Asia/Brunei"],["Bulgaria","BG","Europe/Sofia"],["Burkina Faso","BF","Africa/Ouagadougou"],["Burundi","BI","Africa/Bujumbura"],["Bután","BT","Asia/Thimphu"],["Bélgica","BE","Europe/Brussels"],["Cabo Verde","CV","Atlantic/Cape_Verde"],["Camboya","KH","Asia/Phnom_Penh"],["Camerún","CM","Africa/Douala"],["Canadá","CA","America/Toronto"],["Caribe neerlandés","BQ","America/Kralendijk"],["Catar","QA","Asia/Qatar"],["Chad","TD","Africa/Ndjamena"],["Chequia","CZ","Europe/Prague"],["Chile","CL","America/Santiago"],["China","CN","Asia/Shanghai"],["Chipre","CY","Asia/Nicosia"],["Ciudad del Vaticano","VA","Europe/Vatican"],["Colombia","CO","America/Bogota"],["Comoras","KM","Indian/Comoro"],["Congo","CG","Africa/Brazzaville"],["Corea del Norte","KP","Asia/Pyongyang"],["Corea del Sur","KR","Asia/Seoul"],["Costa Rica","CR","America/Costa_Rica"],["Croacia","HR","Europe/Zagreb"],["Cuba","CU","America/Havana"],["Curazao","CW","America/Curacao"],["Côte d’Ivoire","CI","Africa/Abidjan"],["Dinamarca","DK","Europe/Copenhagen"],["Dominica","DM","America/Dominica"],["Ecuador","EC","America/Guayaquil"],["Egipto","EG","Africa/Cairo"],["El Salvador","SV","America/El_Salvador"],["Emiratos Árabes Unidos","AE","Asia/Dubai"],["Eritrea","ER","Africa/Asmara"],["Eslovaquia","SK","Europe/Bratislava"],["Eslovenia","SI","Europe/Ljubljana"],["España","ES","Europe/Madrid"],["Estados Unidos","US","America/New_York"],["Estonia","EE","Europe/Tallinn"],["Esuatini","SZ","Africa/Mbabane"],["Etiopía","ET","Africa/Addis_Ababa"],["Filipinas","PH","Asia/Manila"],["Finlandia","FI","Europe/Helsinki"],["Fiyi","FJ","Pacific/Fiji"],["Francia","FR","Europe/Paris"],["Gabón","GA","Africa/Libreville"],["Gambia","GM","Africa/Banjul"],["Georgia","GE","Asia/Tbilisi"],["Ghana","GH","Africa/Accra"],["Gibraltar","GI","Europe/Gibraltar"],["Granada","GD","America/Grenada"],["Grecia","GR","Europe/Athens"],["Groenlandia","GL","America/Nuuk"],["Guadalupe","GP","America/Guadeloupe"],["Guam","GU","Pacific/Guam"],["Guatemala","GT","America/Guatemala"],["Guayana Francesa","GF","America/Cayenne"],["Guernesey","GG","Europe/Guernsey"],["Guinea","GN","Africa/Conakry"],["Guinea Ecuatorial","GQ","Africa/Malabo"],["Guinea-Bisáu","GW","Africa/Bissau"],["Guyana","GY","America/Guyana"],["Haití","HT","America/Port-au-Prince"],["Honduras","HN","America/Tegucigalpa"],["Hungría","HU","Europe/Budapest"],["India","IN","Asia/Kolkata"],["Indonesia","ID","Asia/Jakarta"],["Irak","IQ","Asia/Baghdad"],["Irlanda","IE","Europe/Dublin"],["Irán","IR","Asia/Tehran"],["Isla Norfolk","NF","Pacific/Norfolk"],["Isla de Man","IM","Europe/Isle_of_Man"],["Isla de Navidad","CX","Indian/Christmas"],["Islandia","IS","Atlantic/Reykjavik"],["Islas Aland","AX","Europe/Mariehamn"],["Islas Caimán","KY","America/Cayman"],["Islas Cocos","CC","Indian/Cocos"],["Islas Cook","CK","Pacific/Rarotonga"],["Islas Feroe","FO","Atlantic/Faroe"],["Islas Georgia del Sur y Sandwich del Sur","GS","Atlantic/South_Georgia"],["Islas Malvinas","FK","Atlantic/Stanley"],["Islas Marianas del Norte","MP","Pacific/Saipan"],["Islas Marshall","MH","Pacific/Majuro"],["Islas Pitcairn","PN","Pacific/Pitcairn"],["Islas Salomón","SB","Pacific/Guadalcanal"],["Islas Turcas y Caicos","TC","America/Grand_Turk"],["Islas Vírgenes Británicas","VG","America/Tortola"],["Islas Vírgenes de EE. UU.","VI","America/St_Thomas"],["Islas menores alejadas de EE. UU.","UM","Pacific/Midway"],["Israel","IL","Asia/Jerusalem"],["Italia","IT","Europe/Rome"],["Jamaica","JM","America/Jamaica"],["Japón","JP","Asia/Tokyo"],["Jersey","JE","Europe/Jersey"],["Jordania","JO","Asia/Amman"],["Kazajistán","KZ","Asia/Almaty"],["Kenia","KE","Africa/Nairobi"],["Kirguistán","KG","Asia/Bishkek"],["Kiribati","KI","Pacific/Tarawa"],["Kosovo","XK","Europe/Belgrade"],["Kuwait","KW","Asia/Kuwait"],["Laos","LA","Asia/Vientiane"],["Lesoto","LS","Africa/Maseru"],["Letonia","LV","Europe/Riga"],["Liberia","LR","Africa/Monrovia"],["Libia","LY","Africa/Tripoli"],["Liechtenstein","LI","Europe/Vaduz"],["Lituania","LT","Europe/Vilnius"],["Luxemburgo","LU","Europe/Luxembourg"],["Líbano","LB","Asia/Beirut"],["Macedonia del Norte","MK","Europe/Skopje"],["Madagascar","MG","Indian/Antananarivo"],["Malasia","MY","Asia/Kuala_Lumpur"],["Malaui","MW","Africa/Blantyre"],["Maldivas","MV","Indian/Maldives"],["Mali","ML","Africa/Bamako"],["Malta","MT","Europe/Malta"],["Marruecos","MA","Africa/Casablanca"],["Martinica","MQ","America/Martinique"],["Mauricio","MU","Indian/Mauritius"],["Mauritania","MR","Africa/Nouakchott"],["Mayotte","YT","Indian/Mayotte"],["Micronesia","FM","Pacific/Pohnpei"],["Moldavia","MD","Europe/Chisinau"],["Mongolia","MN","Asia/Ulaanbaatar"],["Montenegro","ME","Europe/Podgorica"],["Montserrat","MS","America/Montserrat"],["Mozambique","MZ","Africa/Maputo"],["Myanmar (Birmania)","MM","Asia/Yangon"],["México","MX","America/Mexico_City"],["Mónaco","MC","Europe/Monaco"],["Namibia","NA","Africa/Windhoek"],["Nauru","NR","Pacific/Nauru"],["Nepal","NP","Asia/Kathmandu"],["Nicaragua","NI","America/Managua"],["Nigeria","NG","Africa/Lagos"],["Niue","NU","Pacific/Niue"],["Noruega","NO","Europe/Oslo"],["Nueva Caledonia","NC","Pacific/Noumea"],["Nueva Zelanda","NZ","Pacific/Auckland"],["Níger","NE","Africa/Niamey"],["Omán","OM","Asia/Muscat"],["Pakistán","PK","Asia/Karachi"],["Palaos","PW","Pacific/Palau"],["Panamá","PA","America/Panama"],["Papúa Nueva Guinea","PG","Pacific/Port_Moresby"],["Paraguay","PY","America/Asuncion"],["Países Bajos","NL","Europe/Amsterdam"],["Perú","PE","America/Lima"],["Polinesia Francesa","PF","Pacific/Tahiti"],["Polonia","PL","Europe/Warsaw"],["Portugal","PT","Europe/Lisbon"],["Puerto Rico","PR","America/Puerto_Rico"],["RAE de Hong Kong (China)","HK","Asia/Hong_Kong"],["RAE de Macao (China)","MO","Asia/Macau"],["Reino Unido","GB","Europe/London"],["República Centroafricana","CF","Africa/Bangui"],["República Democrática del Congo","CD","Africa/Kinshasa"],["República Dominicana","DO","America/Santo_Domingo"],["Reunión","RE","Indian/Reunion"],["Ruanda","RW","Africa/Kigali"],["Rumanía","RO","Europe/Bucharest"],["Rusia","RU","Europe/Moscow"],["Samoa","WS","Pacific/Apia"],["Samoa Americana","AS","Pacific/Pago_Pago"],["San Bartolomé","BL","America/St_Barthelemy"],["San Cristóbal y Nieves","KN","America/St_Kitts"],["San Marino","SM","Europe/San_Marino"],["San Martín","MF","America/Marigot"],["San Pedro y Miquelón","PM","America/Miquelon"],["San Vicente y las Granadinas","VC","America/St_Vincent"],["Santa Elena","SH","Atlantic/St_Helena"],["Santa Lucía","LC","America/St_Lucia"],["Santo Tomé y Príncipe","ST","Africa/Sao_Tome"],["Senegal","SN","Africa/Dakar"],["Serbia","RS","Europe/Belgrade"],["Seychelles","SC","Indian/Mahe"],["Sierra Leona","SL","Africa/Freetown"],["Singapur","SG","Asia/Singapore"],["Sint Maarten","SX","America/Lower_Princes"],["Siria","SY","Asia/Damascus"],["Somalia","SO","Africa/Mogadishu"],["Sri Lanka","LK","Asia/Colombo"],["Sudáfrica","ZA","Africa/Johannesburg"],["Sudán","SD","Africa/Khartoum"],["Sudán del Sur","SS","Africa/Juba"],["Suecia","SE","Europe/Stockholm"],["Suiza","CH","Europe/Zurich"],["Surinam","SR","America/Paramaribo"],["Svalbard y Jan Mayen","SJ","Arctic/Longyearbyen"],["Sáhara Occidental","EH","Africa/El_Aaiun"],["Tailandia","TH","Asia/Bangkok"],["Taiwán","TW","Asia/Taipei"],["Tanzania","TZ","Africa/Dar_es_Salaam"],["Tayikistán","TJ","Asia/Dushanbe"],["Territorio Británico del Océano Índico","IO","Indian/Chagos"],["Territorios Australes Franceses","TF","Indian/Kerguelen"],["Territorios Palestinos","PS","Asia/Gaza"],["Timor-Leste","TL","Asia/Dili"],["Togo","TG","Africa/Lome"],["Tokelau","TK","Pacific/Fakaofo"],["Tonga","TO","Pacific/Tongatapu"],["Trinidad y Tobago","TT","America/Port_of_Spain"],["Turkmenistán","TM","Asia/Ashgabat"],["Turquía","TR","Europe/Istanbul"],["Tuvalu","TV","Pacific/Funafuti"],["Túnez","TN","Africa/Tunis"],["Ucrania","UA","Europe/Kyiv"],["Uganda","UG","Africa/Kampala"],["Uruguay","UY","America/Montevideo"],["Uzbekistán","UZ","Asia/Samarkand"],["Vanuatu","VU","Pacific/Efate"],["Venezuela","VE","America/Caracas"],["Vietnam","VN","Asia/Ho_Chi_Minh"],["Wallis y Futuna","WF","Pacific/Wallis"],["Yemen","YE","Asia/Aden"],["Yibuti","DJ","Africa/Djibouti"],["Zambia","ZM","Africa/Lusaka"],["Zimbabue","ZW","Africa/Harare"]];
@@ -377,7 +393,7 @@
   const countdownEl = document.getElementById('countdown');
   const liveBadgeEl = document.getElementById('live-badge');
 
-  function diffForSelected(now){
+  function diffForSelected(now, releaseInstant){
     // Diferencia entre la zona del país elegido y la zona local del navegador,
     // aplicada a "ahora" para saber qué hora es "ahora" en ese país,
     // y así contamos hacia el mismo instante de estreno pero visto desde esa zona.
@@ -385,7 +401,7 @@
     const nowTargetOffset = tzOffsetMinutes(now, selectedTz); // min respecto a UTC, país elegido
     const shiftMs = (nowTargetOffset - nowLocalOffset) * 60000;
     const nowShifted = now.getTime() + shiftMs;
-    return RELEASE_UTC - nowShifted; // negativo = ya se lanzó ahí
+    return releaseInstant - nowShifted; // negativo = ya se lanzó ahí
   }
 
   function updateCountryLabel(rawDiff){
@@ -404,11 +420,17 @@
     resultEl.innerHTML = 'En <b>' + name + '</b> ' + verb + ' el ' + formatted + '.';
   }
 
+  const track3RowEl = document.getElementById('track3-row');
+
   function tick(){
     const now = new Date();
-    const rawDiff = diffForSelected(now);
+    const rawDiff = diffForSelected(now, RELEASE_UTC);
     const launched = rawDiff <= 0;
     const diff = launched ? 0 : rawDiff;
+
+    const fullRawDiff = diffForSelected(now, FULL_RELEASE_UTC);
+    const fullyLaunched = fullRawDiff <= 0;
+    track3RowEl.classList.toggle('locked', !fullyLaunched);
 
     const days = Math.floor(diff / 86400000);
     const hours = Math.floor((diff % 86400000) / 3600000);
