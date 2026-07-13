@@ -137,21 +137,21 @@
   .actions{
     padding:26px 40px; display:flex; align-items:center; gap:24px;
   }
-  .presave{
-    display:inline-flex; align-items:center; gap:10px;
-    background:var(--green); color:#000000;
-    border:none; border-radius:500px;
-    padding:14px 30px;
-    font-size:16px; font-weight:700;
-    cursor:pointer;
-    transition:transform .1s ease, background .15s ease;
-  }
-  .presave:hover{transform:scale(1.03); background:#22e065;}
-  .presave.saved{background:#121212; color:var(--green); border:1px solid #535353;}
-  .presave .icon-circle{
-    width:22px; height:22px; border-radius:50%;
-    border:2px solid currentColor;
+  .play-btn{
     display:flex; align-items:center; justify-content:center;
+    width:56px; height:56px; border-radius:50%;
+    background:var(--green); color:#000000;
+    text-decoration:none;
+    cursor:pointer;
+    animation: play-pulse 2.2s ease-out infinite;
+    transition:transform .15s ease, background .15s ease;
+  }
+  .play-btn:hover{transform:scale(1.06); background:#22e065; animation-play-state:paused;}
+  .play-btn svg{margin-left:3px;}
+  @keyframes play-pulse{
+    0%   { box-shadow:0 0 0 0 rgba(30,215,96,0.55); }
+    70%  { box-shadow:0 0 0 16px rgba(30,215,96,0); }
+    100% { box-shadow:0 0 0 0 rgba(30,215,96,0); }
   }
   .dots{
     width:36px; height:36px; border-radius:50%;
@@ -174,8 +174,12 @@
   }
   .tl-row:hover{background:rgba(255,255,255,0.07);}
   .tl-idx{color:var(--text-dim); font-variant-numeric:tabular-nums;}
-  .tl-song .name{font-weight:400; font-size:16px; color:var(--text);}
-  .tl-song .by{font-size:14px; color:var(--text-dim); margin-top:2px;}
+  .tl-song .name{font-weight:400; font-size:16px; margin:0;}
+  .tl-song .name a{color:var(--text); text-decoration:none;}
+  .tl-song .name a:hover{text-decoration:underline;}
+  .tl-song .by{font-size:14px; margin-top:2px;}
+  .tl-song .by a{color:var(--text-dim); text-decoration:none;}
+  .tl-song .by a:hover{color:var(--text); text-decoration:underline;}
   .tl-time{color:var(--text-dim); font-size:14px; text-align:right; font-variant-numeric:tabular-nums;}
 
   @media (max-width:560px){
@@ -224,12 +228,9 @@
   </div>
 
   <div class="actions">
-    <button class="presave" id="presave-btn">
-      <span id="presave-label">Preguardar</span>
-      <span class="icon-circle">
-        <svg id="presave-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-      </span>
-    </button>
+    <a class="play-btn" href="https://youtu.be/o_WIsCZHc9w" target="_blank" rel="noopener noreferrer" aria-label="Reproducir Me Rompe">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+    </a>
     <span class="dots">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
     </span>
@@ -247,16 +248,16 @@
     <div class="tl-row">
       <div class="tl-idx">1</div>
       <div class="tl-song">
-        <div class="name">Me Rompe [Explicit]</div>
-        <div class="by">MatysitoFlowBakan0</div>
+        <div class="name"><a href="https://youtu.be/o_WIsCZHc9w" target="_blank" rel="noopener noreferrer">Me Rompe [Explicit]</a></div>
+        <div class="by"><a href="https://www.youtube.com/@MatysitoFlowBakan0c/" target="_blank" rel="noopener noreferrer">MatysitoFlowBakan0</a></div>
       </div>
       <div class="tl-time">2:58</div>
     </div>
     <div class="tl-row">
       <div class="tl-idx">2</div>
       <div class="tl-song">
-        <div class="name">Me Rompe (Clean)</div>
-        <div class="by">MatysitoFlowBakan0</div>
+        <div class="name"><a href="https://youtu.be/1CzTOXuogr0" target="_blank" rel="noopener noreferrer">Me Rompe (Clean)</a></div>
+        <div class="by"><a href="https://www.youtube.com/@MatysitoFlowBakan0c/" target="_blank" rel="noopener noreferrer">MatysitoFlowBakan0</a></div>
       </div>
       <div class="tl-time">2:58</div>
     </div>
@@ -339,6 +340,11 @@
     document.getElementById('cd-hours').textContent = pad(hours);
     document.getElementById('cd-mins').textContent = pad(mins);
     document.getElementById('cd-secs').textContent = pad(secs);
+
+    // ---- Título de la pestaña: cambia cuando ya "salió" en el país elegido ----
+    document.title = (diff <= 0)
+      ? 'Me Rompe — MatysitoFlowBakan0 Escuchala ya!'
+      : 'Me Rompe — MatysitoFlowBakan0 (Pre Lanzamiento)';
   }
 
   select.addEventListener('change', () => {
@@ -350,16 +356,6 @@
   updateCountryLabel();
   tick();
   setInterval(tick, 1000);
-
-  // ---- Botón Preguardar (visual) ----
-  const btn = document.getElementById('presave-btn');
-  const label = document.getElementById('presave-label');
-  let saved = false;
-  btn.addEventListener('click', () => {
-    saved = !saved;
-    btn.classList.toggle('saved', saved);
-    label.textContent = saved ? 'Preguardado' : 'Preguardar';
-  });
 </script>
 </body>
 </html>
