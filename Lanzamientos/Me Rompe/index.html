@@ -422,49 +422,56 @@
 
   const track3RowEl = document.getElementById('track3-row');
 
-  function tick(){
-    const now = new Date();
-    const rawDiff = diffForSelected(now, RELEASE_UTC);
-    const launched = rawDiff <= 0;
-    const diff = launched ? 0 : rawDiff;
+  function tick() {
+  const now = new Date();
 
-    const fullRawDiff = diffForSelected(now, FULL_RELEASE_UTC);
-    const fullyLaunched = fullRawDiff <= 0;
-    track3RowEl.classList.toggle('locked', !fullyLaunched);
+  const singleDiff = diffForSelected(now, RELEASE_UTC);
+  const fullDiff = diffForSelected(now, FULL_RELEASE_UTC);
 
-    const days = Math.floor(diff / 86400000);
-    const hours = Math.floor((diff % 86400000) / 3600000);
-    const mins = Math.floor((diff % 3600000) / 60000);
-    const secs = Math.floor((diff % 60000) / 1000);
-    document.getElementById('cd-days').textContent = pad(days);
-    document.getElementById('cd-hours').textContent = pad(hours);
-    document.getElementById('cd-mins').textContent = pad(mins);
-    document.getElementById('cd-secs').textContent = pad(secs);
+  const singleReleased = singleDiff <= 0;
+  const fullReleased = fullDiff <= 0;
 
-    // ---- Countdown vs. badge "Ya disponible" ----
-    countdownEl.hidden = launched;
-    liveBadgeEl.hidden = !launched;
+  // ¿Qué cuenta mostramos?
+  const currentDiff = !singleReleased
+      ? singleDiff
+      : !fullReleased
+      ? fullDiff
+      : 0;
 
-    // ---- "Se publica" -> "Se publicó" cuando ya salió en el país elegido ----
-    dateLineEl.textContent = launched
-      ? 'Se publicó el 12 de julio de 2026'
-      : 'Se publica el 12 de julio de 2026';
+  const days = Math.floor(currentDiff / 86400000);
+  const hours = Math.floor((currentDiff % 86400000) / 3600000);
+  const mins = Math.floor((currentDiff % 3600000) / 60000);
+  const secs = Math.floor((currentDiff % 60000) / 1000);
 
-    // ---- Título de la pestaña ----
-    document.title = launched
-      ? 'Me Rompe — MatysitoFlowBakan0 Escuchala ya!'
-      : 'Me Rompe — MatysitoFlowBakan0 (Pre Lanzamiento)';
+  document.getElementById("cd-days").textContent = pad(days);
+  document.getElementById("cd-hours").textContent = pad(hours);
+  document.getElementById("cd-mins").textContent = pad(mins);
+  document.getElementById("cd-secs").textContent = pad(secs);
 
-    updateCountryLabel(rawDiff);
+  if (!singleReleased) {
+    // Antes del sencillo
+    countdownEl.hidden = false;
+    liveBadgeEl.hidden = true;
+    liveBadgeEl.innerHTML = '<span class="live-dot"></span> Ya disponible';
+    dateLineEl.textContent = "Se publica el 12 de julio de 2026";
+  } else if (!fullReleased) {
+    // Entre 9:00 y 10:00 PM
+    countdownEl.hidden = false;
+    liveBadgeEl.hidden = true;
+    dateLineEl.textContent = "El álbum completo se lanza a las 10:00 PM (México)";
+  } else {
+    // Álbum completo disponible
+    countdownEl.hidden = true;
+    liveBadgeEl.hidden = false;
+    liveBadgeEl.innerHTML =
+      '<span class="live-dot"></span> Álbum completo disponible';
+    dateLineEl.textContent = "Álbum completo disponible";
   }
 
-  select.addEventListener('change', () => {
-    selectedTz = select.value;
-    tick();
-  });
+  track3RowEl.classList.toggle("locked", !fullReleased);
 
-  tick();
-  setInterval(tick, 1000);
+  updateCountryLabel(!singleReleased ? singleDiff : fullDiff);
+}
 </script>
 </body>
 </html>
