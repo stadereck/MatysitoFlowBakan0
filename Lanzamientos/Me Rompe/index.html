@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Me Rompe — MatysitoFlowBakan0 (Pre Lanzamiento)</title>
+<link rel="icon" type="image/png" href="https://t2.genius.com/unsafe/689x689/https%3A%2F%2Fimages.genius.com%2F46c4b6323c90c2a1b215564c4221263f.1000x1000x1.png">
 <style>
   :root{
     --bg: #121212;
@@ -16,6 +17,16 @@
 
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
+  a:focus-visible, button:focus-visible, select:focus-visible{
+    outline:2px solid var(--green);
+    outline-offset:2px;
+    border-radius:2px;
+  }
+  .app{animation:fade-in .5s ease both;}
+  @keyframes fade-in{
+    from{opacity:0; transform:translateY(6px);}
+    to{opacity:1; transform:translateY(0);}
+  }
   body{
     background:linear-gradient(180deg, #4d4d4d 0%, #2c2c2c 32%, var(--bg) 62%, var(--bg) 100%);
     color:var(--text);
@@ -85,6 +96,7 @@
     background:var(--panel);
     border-radius:4px;
     overflow:hidden;
+    transition:opacity .25s ease;
   }
   .countdown .cell{
     padding:14px 22px;
@@ -106,6 +118,24 @@
     font-size:12px; color:var(--text-dim); margin-top:6px;
   }
 
+  .live-badge{
+    display:flex; align-items:center; gap:10px;
+    background:var(--panel);
+    border-radius:4px;
+    padding:0 22px;
+    color:var(--green);
+    font-weight:700; font-size:14px;
+  }
+  .live-dot{
+    width:8px; height:8px; border-radius:50%; background:var(--green);
+    animation:live-pulse 1.8s infinite;
+  }
+  @keyframes live-pulse{
+    0%   { box-shadow:0 0 0 0 rgba(30,215,96,0.55); }
+    70%  { box-shadow:0 0 0 9px rgba(30,215,96,0); }
+    100% { box-shadow:0 0 0 0 rgba(30,215,96,0); }
+  }
+
   .country-card{
     background:var(--panel);
     border-radius:4px;
@@ -116,18 +146,33 @@
   .country-card .q{
     font-size:12px; color:var(--text-dim);
   }
+  .select-wrap{position:relative;}
+  .select-wrap::after{
+    content:"";
+    position:absolute; right:10px; top:50%; transform:translateY(-50%);
+    width:8px; height:8px;
+    border-right:1.5px solid var(--text-dim);
+    border-bottom:1.5px solid var(--text-dim);
+    transform:translateY(-65%) rotate(45deg);
+    pointer-events:none;
+  }
   .country-select{
     width:100%;
+    appearance:none;
+    -webkit-appearance:none;
     background:#2a2a2a;
     color:var(--text);
     border:1px solid var(--line);
     border-radius:4px;
-    padding:7px 8px;
+    padding:8px 26px 8px 10px;
     font-size:13px;
     font-family:inherit;
     outline:none;
+    cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
   }
-  .country-select:focus{border-color:#7a7a7a;}
+  .country-select:hover{border-color:#8a8a8a; background:#323232;}
+  .country-select:focus{border-color:var(--green); box-shadow:0 0 0 1px var(--green);}
   .country-result{
     font-size:12.5px; color:var(--text-dim); line-height:1.4;
   }
@@ -173,7 +218,17 @@
     border-radius:4px;
   }
   .tl-row:hover{background:rgba(255,255,255,0.07);}
-  .tl-idx{color:var(--text-dim); font-variant-numeric:tabular-nums;}
+  .tl-idx{
+    color:var(--text-dim); font-variant-numeric:tabular-nums;
+    position:relative; width:16px; height:16px;
+  }
+  .tl-idx .idx-num{display:block;}
+  .tl-idx .idx-play{
+    display:none; align-items:center; justify-content:center;
+    position:absolute; inset:0; color:var(--text);
+  }
+  .tl-row:hover .idx-num{display:none;}
+  .tl-row:hover .idx-play{display:flex;}
   .tl-song .name{font-weight:400; font-size:16px; margin:0;}
   .tl-song .name a{color:var(--text); text-decoration:none;}
   .tl-song .name a:hover{text-decoration:underline;}
@@ -206,7 +261,7 @@
           </span>
           <a class="artist-link" href="https://www.youtube.com/@MatysitoFlowBakan0c/" target="_blank" rel="noopener noreferrer">MatysitoFlowBakan0</a>
           <span class="dot">•</span>
-          <span>Se publica el 12 de julio de 2026</span>
+          <span id="date-line">Se publica el 12 de julio de 2026</span>
         </div>
 
         <div class="release-row">
@@ -216,10 +271,15 @@
             <div class="cell"><div class="num" id="cd-mins">00</div><div class="label">Minutos</div></div>
             <div class="cell"><div class="num" id="cd-secs">00</div><div class="label">Segundos</div></div>
           </div>
+          <div class="live-badge" id="live-badge" hidden>
+            <span class="live-dot"></span> Ya disponible
+          </div>
 
           <div class="country-card">
             <div class="q">¿De qué país eres?</div>
-            <select class="country-select" id="country-select"></select>
+            <div class="select-wrap">
+              <select class="country-select" id="country-select"></select>
+            </div>
             <div class="country-result" id="country-result"></div>
           </div>
         </div>
@@ -246,7 +306,12 @@
       </div>
     </div>
     <div class="tl-row">
-      <div class="tl-idx">1</div>
+      <div class="tl-idx">
+        <span class="idx-num">1</span>
+        <a class="idx-play" href="https://youtu.be/o_WIsCZHc9w" target="_blank" rel="noopener noreferrer" aria-label="Reproducir Me Rompe Explicit">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        </a>
+      </div>
       <div class="tl-song">
         <div class="name"><a href="https://youtu.be/o_WIsCZHc9w" target="_blank" rel="noopener noreferrer">Me Rompe [Explicit]</a></div>
         <div class="by"><a href="https://www.youtube.com/@MatysitoFlowBakan0c/" target="_blank" rel="noopener noreferrer">MatysitoFlowBakan0</a></div>
@@ -254,7 +319,12 @@
       <div class="tl-time">2:58</div>
     </div>
     <div class="tl-row">
-      <div class="tl-idx">2</div>
+      <div class="tl-idx">
+        <span class="idx-num">2</span>
+        <a class="idx-play" href="https://youtu.be/1CzTOXuogr0" target="_blank" rel="noopener noreferrer" aria-label="Reproducir Me Rompe Clean">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        </a>
+      </div>
       <div class="tl-song">
         <div class="name"><a href="https://youtu.be/1CzTOXuogr0" target="_blank" rel="noopener noreferrer">Me Rompe (Clean)</a></div>
         <div class="by"><a href="https://www.youtube.com/@MatysitoFlowBakan0c/" target="_blank" rel="noopener noreferrer">MatysitoFlowBakan0</a></div>
@@ -303,7 +373,22 @@
   let selectedTz = select.value; // 'America/Mexico_City' por defecto
 
   const resultEl = document.getElementById('country-result');
-  function updateCountryLabel(){
+  const dateLineEl = document.getElementById('date-line');
+  const countdownEl = document.getElementById('countdown');
+  const liveBadgeEl = document.getElementById('live-badge');
+
+  function diffForSelected(now){
+    // Diferencia entre la zona del país elegido y la zona local del navegador,
+    // aplicada a "ahora" para saber qué hora es "ahora" en ese país,
+    // y así contamos hacia el mismo instante de estreno pero visto desde esa zona.
+    const nowLocalOffset = -now.getTimezoneOffset(); // min respecto a UTC, zona del navegador
+    const nowTargetOffset = tzOffsetMinutes(now, selectedTz); // min respecto a UTC, país elegido
+    const shiftMs = (nowTargetOffset - nowLocalOffset) * 60000;
+    const nowShifted = now.getTime() + shiftMs;
+    return RELEASE_UTC - nowShifted; // negativo = ya se lanzó ahí
+  }
+
+  function updateCountryLabel(rawDiff){
     const opt = select.options[select.selectedIndex];
     const name = opt.dataset.name;
     let formatted;
@@ -315,22 +400,15 @@
     } catch(e){
       formatted = '12 de julio, 9:00 p. m.';
     }
-    resultEl.innerHTML = 'En <b>' + name + '</b> se estrena el ' + formatted + '.';
+    const verb = rawDiff <= 0 ? 'salió' : 'se estrena';
+    resultEl.innerHTML = 'En <b>' + name + '</b> ' + verb + ' el ' + formatted + '.';
   }
 
   function tick(){
     const now = new Date();
-    // Diferencia entre la zona del país elegido y la zona local del navegador,
-    // aplicada a "ahora" para saber qué hora es "ahora" en ese país,
-    // y contamos hacia el mismo instante de estreno pero expresado en esa zona.
-    const nowLocalOffset = -now.getTimezoneOffset(); // min respecto a UTC, zona del navegador
-    const nowTargetOffset = tzOffsetMinutes(now, selectedTz); // min respecto a UTC, país elegido
-    const shiftMs = (nowTargetOffset - nowLocalOffset) * 60000;
-
-    // "Ahora, visto desde el país elegido" comparado contra el instante de estreno
-    const nowShifted = now.getTime() + shiftMs;
-    let diff = RELEASE_UTC - nowShifted;
-    if (diff < 0) diff = 0;
+    const rawDiff = diffForSelected(now);
+    const launched = rawDiff <= 0;
+    const diff = launched ? 0 : rawDiff;
 
     const days = Math.floor(diff / 86400000);
     const hours = Math.floor((diff % 86400000) / 3600000);
@@ -341,19 +419,28 @@
     document.getElementById('cd-mins').textContent = pad(mins);
     document.getElementById('cd-secs').textContent = pad(secs);
 
-    // ---- Título de la pestaña: cambia cuando ya "salió" en el país elegido ----
-    document.title = (diff <= 0)
+    // ---- Countdown vs. badge "Ya disponible" ----
+    countdownEl.hidden = launched;
+    liveBadgeEl.hidden = !launched;
+
+    // ---- "Se publica" -> "Se publicó" cuando ya salió en el país elegido ----
+    dateLineEl.textContent = launched
+      ? 'Se publicó el 12 de julio de 2026'
+      : 'Se publica el 12 de julio de 2026';
+
+    // ---- Título de la pestaña ----
+    document.title = launched
       ? 'Me Rompe — MatysitoFlowBakan0 Escuchala ya!'
       : 'Me Rompe — MatysitoFlowBakan0 (Pre Lanzamiento)';
+
+    updateCountryLabel(rawDiff);
   }
 
   select.addEventListener('change', () => {
     selectedTz = select.value;
-    updateCountryLabel();
     tick();
   });
 
-  updateCountryLabel();
   tick();
   setInterval(tick, 1000);
 </script>
